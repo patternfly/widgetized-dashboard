@@ -9,9 +9,10 @@
   ],
   "scripts": {
     "build": "yarn workspace @patternfly/widgetized-dashboard build",
+    "build:watch": "yarn workspace @patternfly/widgetized-dashboard build:watch",
     "build:docs": "yarn workspace @patternfly/widgetized-dashboard docs:build",
     "build:fed:packages": "yarn workspace @patternfly/widgetized-dashboard build:fed:packages",
-    "start": "yarn build && concurrently --kill-others \"yarn workspace @patternfly/widgetized-dashboard docs:develop\"",
+    "start": "concurrently --kill-others \"yarn build:watch\" \"yarn workspace @patternfly/widgetized-dashboard docs:develop\"",
     "serve:docs": "yarn workspace @patternfly/widgetized-dashboard docs:serve",
     "clean": "yarn workspace @patternfly/widgetized-dashboard clean",
     "lint:js": "node --max-old-space-size=4096 node_modules/.bin/eslint packages --cache",

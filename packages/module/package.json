@@ -6,6 +6,7 @@
   "module": "dist/esm/index.js",
   "scripts": {
     "build": "tsc --build --verbose ./tsconfig.json",
+    "build:watch": "tsc --build --verbose --watch ./tsconfig.json",
     "build:fed:packages": "node generate-fed-package-json.js",
     "clean": "rimraf dist",
     "docs:develop": "pf-docs-framework start",
