@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`Matches expected default snapshot 1`] = `
+<DocumentFragment>
+  <button
+    class="pf-v6-c-button pf-m-primary"
+    data-ouia-component-id="ouiaId"
+    data-ouia-component-type="PF6/Button"
+    data-ouia-safe="true"
+    type="button"
+  >
+    <span
+      class="pf-v6-c-button__text"
+    >
+      Test
+    </span>
+  </button>
+</DocumentFragment>
+`;

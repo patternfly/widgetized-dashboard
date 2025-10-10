@@ -1,0 +1,52 @@
+{
+  "name": "@patternfly/widgetized-dashboard",
+  "version": "1.0.0",
+  "description": "Provide a user customizable widget based dashboard built using PatternFly",
+  "main": "dist/esm/index.js",
+  "module": "dist/esm/index.js",
+  "scripts": {
+    "build": "tsc --build --verbose ./tsconfig.json",
+    "build:fed:packages": "node generate-fed-package-json.js",
+    "clean": "rimraf dist",
+    "docs:develop": "pf-docs-framework start",
+    "docs:build": "pf-docs-framework build all --output public",
+    "docs:serve": "pf-docs-framework serve public --port 5000",
+    "docs:screenshots": "pf-docs-framework screenshots --urlPrefix http://localhost:5000",
+    "test:a11y": "patternfly-a11y --config patternfly-a11y.config",
+    "serve:a11y": "yarn serve coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/patternfly/widgetized-dashboard"
+  },
+  "author": "Red Hat",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/patternfly/widgetized-dashboard/issues"
+  },
+  "homepage": "https://github.com/patternfly/widgetized-dashboard#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@patternfly/react-core": "^6.3.1"
+  },
+  "peerDependencies": {
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
+    "@babel/plugin-proposal-private-methods": "^7.18.6",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@patternfly/documentation-framework": "^6.24.2",
+    "@patternfly/patternfly": "^6.3.1",
+    "@patternfly/patternfly-a11y": "^5.1.0",
+    "@patternfly/react-code-editor": "^6.3.1",
+    "@patternfly/react-table": "^6.3.1",
+    "monaco-editor": "^0.53.0",
+    "react-monaco-editor": "^0.59.0",
+    "rimraf": "^6.0.1"
+  }
+}
