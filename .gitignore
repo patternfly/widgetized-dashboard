@@ -9,9 +9,12 @@ coverage
 .cache
 .tmp
 .eslintcache
+public
+generated
 
 # package managers
 yarn-error.log
+.yarn
 lerna-debug.log
 
 # IDEs and editors
@@ -30,7 +33,3 @@ lerna-debug.log
 .vscode
 # For vim
 *.swp
-
-public
-
-.yarn
