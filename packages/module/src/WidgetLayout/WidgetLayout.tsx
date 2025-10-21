@@ -28,43 +28,6 @@ export interface WidgetLayoutProps {
   initialDrawerOpen?: boolean;
 };
 
-/**
- * WidgetLayout - A complete drag-and-drop dashboard layout component
- * 
- * This component provides a full-featured dashboard experience with:
- * - Responsive grid layout with drag-and-drop
- * - Widget drawer for adding/removing widgets
- * - Lock/unlock widgets
- * - Resize widgets
- * - Persistent layout configuration
- * 
- * @example
- * ```tsx
- * const widgetMapping = {
- *   'my-widget': {
- *     defaults: { w: 2, h: 3, maxH: 6, minH: 2 },
- *     config: {
- *       title: 'My Widget',
- *       icon: <MyIcon />
- *     },
- *     renderWidget: (id) => <MyWidgetContent />
- *   }
- * };
- * 
- * const template = {
- *   xl: [{ i: 'my-widget#1', x: 0, y: 0, w: 2, h: 3, widgetType: 'my-widget', title: 'My Widget' }],
- *   lg: [...],
- *   md: [...],
- *   sm: [...]
- * };
- * 
- * <WidgetLayout
- *   widgetMapping={widgetMapping}
- *   initialTemplate={template}
- *   onTemplateChange={(newTemplate) => saveTemplate(newTemplate)}
- * />
- * ```
- */
 const WidgetLayout = ({
   widgetMapping,
   initialTemplate,
