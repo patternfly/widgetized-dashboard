@@ -17,11 +17,9 @@ sourceLink: https://github.com/patternfly/widgetized-dashboard
 import { FunctionComponent, useState } from 'react';
 import { CubeIcon, ChartLineIcon, BellIcon } from '@patternfly/react-icons';
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
-import WidgetLayout from '@patternfly/widgetized-dashboard/dist/esm/WidgetLayout/WidgetLayout';
-import GridLayout from '@patternfly/widgetized-dashboard/dist/esm/WidgetLayout/GridLayout';
-import WidgetDrawer from '@patternfly/widgetized-dashboard/dist/esm/WidgetLayout/WidgetDrawer';
+import { WidgetLayout, GridLayout, WidgetDrawer } from '@patternfly/widgetized-dashboard';
 
-## Basic usage
+### Basic usage
 
 The WidgetLayout component provides a complete drag-and-drop dashboard experience with a widget drawer for adding and removing widgets.
 
@@ -31,7 +29,7 @@ The WidgetLayout component provides a complete drag-and-drop dashboard experienc
 
 ```
 
-## Locked layout
+### Locked layout
 
 Use `isLayoutLocked` to prevent users from modifying the layout.
 
@@ -39,7 +37,7 @@ Use `isLayoutLocked` to prevent users from modifying the layout.
 
 ```
 
-## Without drawer
+### Without drawer
 
 You can hide the widget drawer by setting `showDrawer={false}`.
 

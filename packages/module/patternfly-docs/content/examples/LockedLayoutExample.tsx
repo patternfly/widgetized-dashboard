@@ -1,5 +1,5 @@
 import React from 'react';
-import WidgetLayout from '@patternfly/widgetized-dashboard/dist/esm/WidgetLayout/WidgetLayout';
+import WidgetLayout from '../../../src/WidgetLayout/WidgetLayout';
 import { WidgetMapping, ExtendedTemplateConfig } from '../../../src/WidgetLayout/types';
 import { CubeIcon, ChartLineIcon } from '@patternfly/react-icons';
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
@@ -70,18 +70,14 @@ const initialTemplate: ExtendedTemplateConfig = {
   ]
 };
 
-export const BasicExample: React.FunctionComponent = () => (
+export const LockedLayoutExample: React.FunctionComponent = () => (
   <div style={{ height: '600px' }}>
     <WidgetLayout
       widgetMapping={widgetMapping}
       initialTemplate={initialTemplate}
       isLayoutLocked={true}
-      showDrawer={false} 
-      onTemplateChange={undefined} 
-      emptyStateComponent={undefined} 
-      documentationLink={undefined} 
-      analytics={undefined} 
-      drawerInstructionText={undefined}    />
+      showDrawer={false}
+    />
   </div>
 );
 

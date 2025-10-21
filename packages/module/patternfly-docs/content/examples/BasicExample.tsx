@@ -1,6 +1,6 @@
 import React from 'react';
-import WidgetLayout from '@patternfly/widgetized-dashboard/dist/esm/WidgetLayout/WidgetLayout';
-import { WidgetMapping, ExtendedTemplateConfig } from '@patternfly/widgetized-dashboard/dist/esm/WidgetLayout/types';
+import WidgetLayout from '../../../src/WidgetLayout/WidgetLayout';
+import { WidgetMapping, ExtendedTemplateConfig } from '../../../src/WidgetLayout/types';
 import { CubeIcon, ChartLineIcon, BellIcon } from '@patternfly/react-icons';
 import { Card, CardBody, CardTitle } from '@patternfly/react-core';
 

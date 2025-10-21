@@ -27,28 +27,28 @@ export type ExtendedTemplateConfig = {
 // Extended type the UI tracks
 export type PartialExtendedTemplateConfig = Partial<ExtendedTemplateConfig>;
 
-export type WidgetDefaults = {
+export interface WidgetDefaults {
   w: number;
   h: number;
   maxH: number;
   minH: number;
-};
+}
 
-export type WidgetHeaderLink = {
+export interface WidgetHeaderLink {
   title?: string;
   href?: string;
-};
+}
 
-export type WidgetConfiguration = {
+export interface WidgetConfiguration {
   icon?: React.ReactNode;
   headerLink?: WidgetHeaderLink;
   title?: string;
-};
+}
 
 /**
  * Widget definition with rendering function
  */
-export type WidgetDefinition = {
+export interface WidgetDefinition {
   /** Unique widget type identifier */
   widgetType: string;
   /** Default dimensions for the widget */
@@ -57,23 +57,23 @@ export type WidgetDefinition = {
   config?: WidgetConfiguration;
   /** Function that renders the widget content */
   renderWidget: (widgetId: string) => React.ReactNode;
-};
+}
 
 /**
  * Widget mapping keyed by widget type
  */
-export type WidgetMapping = {
+export interface WidgetMapping {
   [widgetType: string]: Omit<WidgetDefinition, 'widgetType'>;
-};
+}
 
 /**
  * Notification type for user feedback
  */
-export type Notification = {
+export interface Notification {
   variant: 'success' | 'danger' | 'warning' | 'info' | 'default';
   title: string;
   description?: string;
-};
+}
 
 /**
  * Analytics tracking function (optional)

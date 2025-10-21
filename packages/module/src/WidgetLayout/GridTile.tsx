@@ -21,7 +21,6 @@ import {
 import { CompressIcon, EllipsisVIcon, ExpandIcon, GripVerticalIcon, LockIcon, MinusCircleIcon, UnlockIcon } from '@patternfly/react-icons';
 import React, { useMemo, useState } from 'react';
 import clsx from 'clsx';
-import { Link } from 'react-router-dom';
 import { Layout } from 'react-grid-layout';
 import { ExtendedLayoutItem, WidgetConfiguration, AnalyticsTracker } from './types';
 
@@ -210,7 +209,9 @@ const GridTile = ({
                   <Button
                     className="pf-v6-u-font-weight-bold pf-v6-u-font-size-xs pf-v6-u-p-0"
                     variant="link"
-                    component={(props) => <Link {...props} to={linkHref} target={linkTarget} />}
+                    component="a"
+                    href={linkHref}
+                    target={linkTarget}
                   >
                     {headerLink.title}
                   </Button>

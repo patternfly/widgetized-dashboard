@@ -257,7 +257,6 @@ const GridLayout = ({
         onLayoutChange={onLayoutChange}
       >
         {activeLayout
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           .map(({ widgetType, title, ...rest }, index) => {
             const widget = widgetMapping[widgetType];
             if (!widget) {
