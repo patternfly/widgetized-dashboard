@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from '@patternfly/react-core';
 import React, { useState } from 'react';
-import { CloseIcon, GripVerticalIcon } from '@patternfly/react-icons';
+import { CloseIcon, GripVerticalIcon, PlusCircleIcon } from '@patternfly/react-icons';
 import { WidgetMapping, WidgetConfiguration } from './types';
 
 export type WidgetDrawerProps = React.PropsWithChildren<{
@@ -105,10 +105,7 @@ const WidgetDrawer = ({
   const panelContent = (
     <PageSection
       hasBodyWrapper={false}
-      className="widg-c-page__main-section--drawer pf-v6-u-p-md pf-v6-u-p-lg-on-sm"
-      style={{
-        backgroundColor: 'var(--pf-t--global--background--color--primary--default)',
-      }}
+      className="widg-c-page__main-section--drawer pf-v6-u-p-md pf-v6-u-p-lg-on-sm pf-v6-u-background-color-secondary-default"
     >
       <Split className="widg-l-split--add-widget">
         <SplitItem isFilled>
@@ -139,7 +136,7 @@ const WidgetDrawer = ({
           />
         </SplitItem>
       </Split>
-      <Gallery className="widg-l-gallery pf-v6-u-pt-sm" hasGutter>
+      <Gallery className="widg-l-gallery pf-v6-u-pt-sm pf-v6-u-justify-content-center" hasGutter>
         {filteredWidgetMapping.map(([type, widget], i) => (
             <GalleryItem key={i}>
               <WidgetWrapper
@@ -156,7 +153,16 @@ const WidgetDrawer = ({
   
   return (
     <>
-      {isOpen ? <div>{panelContent}</div> : null}
+      <div style={{ position: 'sticky', top: 0, zIndex: 100, display: 'flex', justifyContent: 'flex-end', padding: 'var(--pf-t--global--spacer--md)' }}>
+        <Button
+          variant='secondary'
+          onClick={() => setIsOpen(!isOpen)}
+          icon={<PlusCircleIcon />}
+        >
+          Add widgets
+        </Button>
+      </div>
+      {isOpen && <div>{panelContent}</div>}
       {children}
     </>
   );
