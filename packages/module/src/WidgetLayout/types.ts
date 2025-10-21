@@ -1,0 +1,82 @@
+import { Layout } from 'react-grid-layout';
+
+export const widgetIdSeparator = '#';
+
+export type Variants = 'sm' | 'md' | 'lg' | 'xl';
+
+export type LayoutWithTitle = Layout & { title: string };
+
+export type TemplateConfig = {
+  [k in Variants]: LayoutWithTitle[];
+};
+
+export type PartialTemplateConfig = Partial<TemplateConfig>;
+
+// Extended type the UI tracks
+export type ExtendedLayoutItem = LayoutWithTitle & {
+  widgetType: string;
+  config?: WidgetConfiguration;
+  locked?: boolean;
+};
+
+// Extended type the UI tracks
+export type ExtendedTemplateConfig = {
+  [k in Variants]: ExtendedLayoutItem[];
+};
+
+// Extended type the UI tracks
+export type PartialExtendedTemplateConfig = Partial<ExtendedTemplateConfig>;
+
+export type WidgetDefaults = {
+  w: number;
+  h: number;
+  maxH: number;
+  minH: number;
+};
+
+export type WidgetHeaderLink = {
+  title?: string;
+  href?: string;
+};
+
+export type WidgetConfiguration = {
+  icon?: React.ReactNode;
+  headerLink?: WidgetHeaderLink;
+  title?: string;
+};
+
+/**
+ * Widget definition with rendering function
+ */
+export type WidgetDefinition = {
+  /** Unique widget type identifier */
+  widgetType: string;
+  /** Default dimensions for the widget */
+  defaults: WidgetDefaults;
+  /** Widget configuration (title, icon, header link) */
+  config?: WidgetConfiguration;
+  /** Function that renders the widget content */
+  renderWidget: (widgetId: string) => React.ReactNode;
+};
+
+/**
+ * Widget mapping keyed by widget type
+ */
+export type WidgetMapping = {
+  [widgetType: string]: Omit<WidgetDefinition, 'widgetType'>;
+};
+
+/**
+ * Notification type for user feedback
+ */
+export type Notification = {
+  variant: 'success' | 'danger' | 'warning' | 'info' | 'default';
+  title: string;
+  description?: string;
+};
+
+/**
+ * Analytics tracking function (optional)
+ */
+export type AnalyticsTracker = (event: string, data?: Record<string, unknown>) => void;
+
