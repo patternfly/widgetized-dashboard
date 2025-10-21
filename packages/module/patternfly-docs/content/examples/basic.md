@@ -15,8 +15,8 @@ sourceLink: https://github.com/patternfly/widgetized-dashboard
 --- 
 
 import { FunctionComponent, useState } from 'react';
-import { CubeIcon, ChartLineIcon, BellIcon } from '@patternfly/react-icons';
-import { Card, CardBody, CardTitle } from '@patternfly/react-core';
+import { ExternalLinkAltIcon, ArrowRightIcon, CubeIcon, ChartLineIcon, BellIcon } from '@patternfly/react-icons';
+import { Card, CardBody, CardFooter, Content, Icon } from '@patternfly/react-core';
 import { WidgetLayout, GridLayout, WidgetDrawer } from '@patternfly/widgetized-dashboard';
 
 ### Basic usage
