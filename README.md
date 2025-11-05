@@ -2,17 +2,6 @@
 
 A generic, reusable PatternFly component library providing a customizable widget-based dashboard with drag-and-drop functionality.
 
-## Features
-
-- **Drag-and-Drop Grid Layout**: Powered by `react-grid-layout` with responsive breakpoints
-- **Widget Drawer**: Easy widget selection and management
-- **Lock/Unlock Widgets**: Prevent accidental changes to widget positions and sizes
-- **Resize Widgets**: Adjust widget dimensions with corner handles
-- **Responsive Design**: Automatic layout adjustments for xl, lg, md, and sm breakpoints
-- **Customizable**: Fully configurable widgets with custom icons, titles, and content
-- **TypeScript Support**: Full type definitions included
-- **No External Dependencies**: Self-contained state management (no Jotai, Redux, or other state libraries required)
-
 ## Prerequisites
 
 - Node.js 18 or higher
@@ -194,6 +183,4 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 - **Issues**: [GitHub Issues](https://github.com/patternfly/widgetized-dashboard/issues)
 - **Source**: [GitHub Repository](https://github.com/patternfly/widgetized-dashboard)
 
-## Credits
 
-This library is based on the [RedHatInsights/widget-layout](https://github.com/RedHatInsights/widget-layout) repository, adapted to be a generic PatternFly component.
