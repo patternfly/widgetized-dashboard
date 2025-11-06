@@ -257,24 +257,25 @@ const GridLayout = ({
         onLayoutChange={onLayoutChange}
       >
         {activeLayout
-          .map(({ widgetType, title, ...rest }, index) => {
+          .map((layoutItem, index) => {
+            const { widgetType } = layoutItem;
             const widget = widgetMapping[widgetType];
             if (!widget) {
               return null;
             }
             const config = widgetMapping[widgetType]?.config;
             return (
-              <div key={rest.i} data-grid={rest} tabIndex={index} className={`widget-columns-${rest.w} widget-rows-${rest.h}`}>
+              <div key={layoutItem.i} data-grid={layoutItem} tabIndex={index} className={`widget-columns-${layoutItem.w} widget-rows-${layoutItem.h}`}>
                 <GridTile
                   isDragging={isDragging}
                   setIsDragging={setIsDragging}
                   widgetType={widgetType}
-                  widgetConfig={{ ...rest, colWidth: layoutWidth / columns[layoutVariant], config }}
+                  widgetConfig={{ ...layoutItem, colWidth: layoutWidth / columns[layoutVariant], config }}
                   setWidgetAttribute={setWidgetAttribute}
                   removeWidget={removeWidget}
                   analytics={analytics}
                 >
-                  {widget.renderWidget(rest.i)}
+                  {widget.renderWidget(layoutItem.i)}
                 </GridTile>
               </div>
             );

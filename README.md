@@ -1,17 +1,13 @@
 # Widgetized Dashboard
 
-A generic, reusable PatternFly component library providing a customizable widget-based dashboard with drag-and-drop functionality. This library was created by lifting and adapting code from the [RedHatInsights/widget-layout](https://github.com/RedHatInsights/widget-layout) repository, removing console-specific dependencies to make it suitable for any PatternFly application.
+A generic, reusable PatternFly component library providing a customizable widget-based dashboard with drag-and-drop functionality.
 
-## Features
+## Prerequisites
 
-- **Drag-and-Drop Grid Layout**: Powered by `react-grid-layout` with responsive breakpoints
-- **Widget Drawer**: Easy widget selection and management
-- **Lock/Unlock Widgets**: Prevent accidental changes to widget positions and sizes
-- **Resize Widgets**: Adjust widget dimensions with corner handles
-- **Responsive Design**: Automatic layout adjustments for xl, lg, md, and sm breakpoints
-- **Customizable**: Fully configurable widgets with custom icons, titles, and content
-- **TypeScript Support**: Full type definitions included
-- **No External Dependencies**: Self-contained state management (no Jotai, Redux, or other state libraries required)
+- Node.js 18 or higher
+- Yarn 4.10.3 or higher (recommended) or npm
+- React 18 (peer dependency)
+- React DOM 18 (peer dependency)
 
 ## Installation
 
@@ -27,10 +23,10 @@ npm install @patternfly/widgetized-dashboard
 
 ### Peer Dependencies
 
-Make sure you have the required peer dependencies installed:
+This library requires React 18+ and React DOM 18+ as peer dependencies. Make sure these are installed in your project:
 
 ```bash
-yarn add react react-dom react-router-dom @patternfly/react-core @patternfly/react-icons
+yarn add react@^18 react-dom@^18
 ```
 
 ## Quick Start
@@ -85,7 +81,12 @@ function App() {
 ## Documentation
 
 - [Getting Started Guide](./packages/module/patternfly-docs/content/examples/basic.md)
-- [API Reference](./packages/module/patternfly-docs/content/design-guidelines/design-guidelines.md)
+
+## Examples
+
+- [Basic Example](./packages/module/patternfly-docs/content/examples/BasicExample.tsx) - Complete dashboard with drawer
+- [Locked Layout Example](./packages/module/patternfly-docs/content/examples/LockedLayoutExample.tsx) - Dashboard with locked widgets
+- [Without Drawer Example](./packages/module/patternfly-docs/content/examples/WithoutDrawerExample.tsx) - Grid layout without widget drawer
 
 ## Key Components
 
@@ -105,40 +106,81 @@ The widget selection drawer (can be used standalone with GridLayout).
 
 Individual widget tile wrapper with actions menu (used internally by GridLayout).
 
-## Differences from widget-layout
+## Development
 
-This library is based on [RedHatInsights/widget-layout](https://github.com/RedHatInsights/widget-layout) but has been adapted to be a generic, reusable PatternFly component:
+### Setup
 
-### Removed
-- ❌ Scalprum federated module loading
-- ❌ Chrome Services API calls for template persistence
-- ❌ Console-specific authentication (useCurrentUser)
-- ❌ Console-specific analytics (useChrome)
-- ❌ Jotai state management atoms
-- ❌ Console-specific icons and branding
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/patternfly/widgetized-dashboard.git
+   cd widgetized-dashboard
+   ```
 
-### Added
-- ✅ Generic widget rendering via `renderWidget` prop
-- ✅ Prop-based template management (bring your own state management)
-- ✅ Optional analytics callback
-- ✅ Standalone component usage (no external state required)
-- ✅ Full TypeScript support
-- ✅ Simplified API without console dependencies
+2. Install dependencies:
+   ```bash
+   yarn install
+   ```
 
-## Browser Support
+3. Start the development server:
+   ```bash
+   yarn start
+   ```
+   This will build the library and start the documentation site at http://localhost:8003
 
-Modern browsers (Chrome, Firefox, Safari, Edge) with ES6 support.
+### Building for Production
 
-## License
+```bash
+yarn build
+```
 
-MIT
+### Testing and Linting
+
+- Run unit tests: `yarn test`
+- Run linter: `yarn lint`
+- Lint JavaScript: `yarn lint:js`
+- Lint Markdown: `yarn lint:md`
+
+### Accessibility Testing
+
+1. Build the docs: `yarn build:docs`
+2. Serve the docs: `yarn serve:docs`
+3. In a new terminal window, run: `yarn test:a11y`
+4. View the generated report: `yarn serve:a11y`
 
 ## Contributing
+
+We welcome contributions! Please follow the guidelines below when contributing to this project.
+
+### Component Guidelines
+
+- Follow PatternFly naming conventions
+- Include TypeScript definitions for all components and props
+- Write unit tests using React Testing Library
+- Add documentation examples in `packages/module/patternfly-docs/content/examples/`
+- Follow the existing code style and linting rules
+- Ensure all tests pass before submitting a pull request
+
+### Pull Request Process
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes with appropriate tests
+4. Run `yarn lint` and `yarn test` to ensure code quality
+5. Commit your changes (`git commit -m 'Add some amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a pull request
 
 ### AI-assisted development guidelines
 
 Please reference [PatternFly's AI-assisted development guidelines](https://github.com/patternfly/.github/blob/main/CONTRIBUTING.md) if you'd like to contribute code generated using AI.
 
-## Credits
+## License
 
-This library is based on the [RedHatInsights/widget-layout](https://github.com/RedHatInsights/widget-layout) repository, adapted to be a generic PatternFly component.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+## Repository
+
+- **Issues**: [GitHub Issues](https://github.com/patternfly/widgetized-dashboard/issues)
+- **Source**: [GitHub Repository](https://github.com/patternfly/widgetized-dashboard)
+
+
