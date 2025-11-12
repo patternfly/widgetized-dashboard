@@ -31,7 +31,7 @@ export const gridLayoutStyles = `
 
   .react-grid-item.react-grid-placeholder {
     background-color: var(--pf-t--color--gray--60);
-    border-radius: 12px;
+    border-radius: var(--pf-t--global--border--radius--medium);
   }
 
   .react-grid-item .react-resizable-handle::after {
@@ -39,7 +39,7 @@ export const gridLayoutStyles = `
   }
 
   .react-grid-item .react-resizable-handle img {
-    padding: 3px;
+    padding: var(--pf-t--global--spacer--xs);
   }
 
   #widget-layout-container {
@@ -78,21 +78,21 @@ export const gridLayoutStyles = `
   }
 
   .grid-tile .widg-c-icon--header .service-icon {
-    height: 28px;
-    width: 28px;
+    height: var(--pf-t--global--icon--size--lg);
+    width: var(--pf-t--global--icon--size--lg);
   }
 
   .grid-tile .widg-c-icon--header .pf-v6-svg {
     color: var(--pf-t--color--blue--50);
-    height: 22px;
-    width: 22px;
+    height: var(--pf-t--global--icon--size--md);
+    width: var(--pf-t--global--icon--size--md);
     margin-bottom: var(--pf-t--global--spacer--sm);
   }
 
   .grid-tile .widg-card-header-text {
     gap: 0;
     line-height: 0;
-    padding-top: 2px;
+    padding-top: var(--pf-t--global--spacer--xs);
   }
 
   .grid-tile .pf-v6-c-card__header .pf-v6-c-menu-toggle {
@@ -117,7 +117,7 @@ export const gridLayoutStyles = `
   }
 
   .widg-l-gallery {
-    --pf-v6-l-gallery--m-gutter--GridGap: 8px;
+    --pf-v6-l-gallery--m-gutter--GridGap: var(--pf-t--global--spacer--sm);
   }
 `;
 
