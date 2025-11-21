@@ -53,13 +53,16 @@ export const extendLayout = (extendedTemplateConfig: ExtendedTemplateConfig): Ex
  * Get grid dimensions based on container width
  */
 export function getGridDimensions(currentWidth: number): Variants {
-  let variant: Variants = 'xl';
-  Object.entries(breakpoints).forEach(([breakpoint, value]) => {
-    if (value >= currentWidth) {
-      variant = breakpoint as Variants;
-    }
-  });
-  return variant;
+  if (currentWidth >= breakpoints.xl) {
+    return 'xl';
+  }
+  if (currentWidth >= breakpoints.lg) {
+    return 'lg';
+  }
+  if (currentWidth >= breakpoints.md) {
+    return 'md';
+  }
+  return 'sm';
 }
 
 /**

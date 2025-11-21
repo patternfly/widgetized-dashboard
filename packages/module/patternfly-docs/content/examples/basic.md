@@ -25,7 +25,7 @@ The WidgetLayout component provides a complete drag-and-drop dashboard experienc
 
 ### Interactive example
 
-```js file="./BasicExample.tsx"
+```js file="./BasicExample.tsx" isFullscreen
 
 ```
 
