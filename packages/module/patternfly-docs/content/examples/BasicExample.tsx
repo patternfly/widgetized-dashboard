@@ -135,9 +135,7 @@ export const BasicExample: React.FunctionComponent = () => {
       <WidgetLayout
         widgetMapping={widgetMapping}
         initialTemplate={template}
-        onTemplateChange={(newTemplate) => {
-          setTemplate(newTemplate);
-        }}
+        onTemplateChange={setTemplate}
         documentationLink="https://www.patternfly.org"
         initialDrawerOpen={true}
       />

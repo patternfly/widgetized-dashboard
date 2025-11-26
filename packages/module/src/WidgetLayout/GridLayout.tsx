@@ -11,12 +11,21 @@ import {
   WidgetMapping,
   ExtendedTemplateConfig,
   AnalyticsTracker,
+  WidgetConfiguration,
 } from './types';
 import { Button, EmptyState, EmptyStateActions, EmptyStateBody, EmptyStateVariant, PageSection } from '@patternfly/react-core';
 import { ExternalLinkAltIcon, GripVerticalIcon, PlusCircleIcon } from '@patternfly/react-icons';
 import { columns, breakpoints, droppingElemId, getWidgetIdentifier, extendLayout, getGridDimensions } from './utils';
 
 export const defaultBreakpoints = breakpoints;
+
+const createSerializableConfig = (config?: WidgetConfiguration) => {
+  if (!config) return undefined;
+  return {
+    ...(config.title && { title: config.title }),
+    ...(config.headerLink && { headerLink: config.headerLink })
+  };
+};
 
 // SVG resize handle as inline data URI
 const resizeHandleSvg = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE2IDEuMTQyODZMMTQuODU3MSAwTDAgMTQuODU3MVYxNkgxLjE0Mjg2TDE2IDEuMTQyODZaIiBmaWxsPSIjRDJEMkQyIi8+Cjwvc3ZnPgo=';
@@ -115,7 +124,7 @@ const GridLayout = ({
         i: droppingElemId,
         widgetType: currentDropInItem,
         title: 'New title',
-        config: widget.config,
+        config: createSerializableConfig(widget.config)
       };
     }
     return undefined;
@@ -161,7 +170,7 @@ const GridLayout = ({
           widgetType: data,
           i: getWidgetIdentifier(data),
           title: 'New title',
-          config: widget.config,
+          config: createSerializableConfig(widget.config)
         };
         return {
           ...acc,
