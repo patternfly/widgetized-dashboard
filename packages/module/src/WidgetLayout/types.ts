@@ -1,4 +1,5 @@
 import { Layout } from 'react-grid-layout';
+import { CardProps, CardBodyProps } from '@patternfly/react-core';
 
 export const widgetIdSeparator = '#';
 
@@ -43,6 +44,8 @@ export interface WidgetConfiguration {
   icon?: React.ReactNode;
   headerLink?: WidgetHeaderLink;
   title?: string;
+  wrapperProps?: Omit<CardProps, 'children'>;
+  cardBodyProps?: Omit<CardBodyProps, 'children'>;
 }
 
 /**

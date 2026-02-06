@@ -178,8 +178,9 @@ const GridTile = ({
 
   return (
     <Card
+      {...widgetConfig.config?.wrapperProps}
       ouiaId={`${widgetType}-widget`}
-      className={clsx('grid-tile', {
+      className={clsx('grid-tile', widgetConfig.config?.wrapperProps?.className, {
         static: widgetConfig.static,
       })}
     >
@@ -222,7 +223,7 @@ const GridTile = ({
         </Flex>
       </CardHeader>
       <Divider />
-      <CardBody className="pf-v6-u-p-0">{children}</CardBody>
+      <CardBody {...widgetConfig.config?.cardBodyProps} className={clsx('pf-v6-u-p-0', widgetConfig.config?.cardBodyProps?.className)}>{children}</CardBody>
     </Card>
   );
 };
