@@ -28,6 +28,10 @@ export type WidgetDrawerProps = React.PropsWithChildren<{
   onOpenChange?: (isOpen: boolean) => void;
   /** Custom instruction text */
   instructionText?: string;
+  /** Callback when widget drag starts from drawer */
+  onWidgetDragStart?: (widgetType: string) => void;
+  /** Callback when widget drag ends */
+  onWidgetDragEnd?: () => void;
 }>;
 
 const WidgetWrapper = ({ widgetType, config, onDragStart, onDragEnd }: {
@@ -91,6 +95,8 @@ const WidgetDrawer = ({
   isOpen: controlledIsOpen,
   onOpenChange,
   instructionText,
+  onWidgetDragStart,
+  onWidgetDragEnd,
 }: WidgetDrawerProps) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   
@@ -142,8 +148,8 @@ const WidgetDrawer = ({
               <WidgetWrapper
                 widgetType={type}
                 config={widget.config}
-                onDragStart={() => {}}
-                onDragEnd={() => {}}
+                onDragStart={(widgetType) => onWidgetDragStart?.(widgetType)}
+                onDragEnd={() => onWidgetDragEnd?.()}
               />
             </GalleryItem>
           ))}

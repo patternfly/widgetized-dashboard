@@ -44,6 +44,7 @@ const WidgetLayout = ({
   const [template, setTemplate] = useState<ExtendedTemplateConfig>(initialTemplate);
   const [drawerOpen, setDrawerOpen] = useState(initialDrawerOpen);
   const [currentlyUsedWidgets, setCurrentlyUsedWidgets] = useState<string[]>([]);
+  const [droppingWidgetType, setDroppingWidgetType] = useState<string | undefined>();
 
   const handleTemplateChange = (newTemplate: ExtendedTemplateConfig) => {
     setTemplate(newTemplate);
@@ -70,6 +71,7 @@ const WidgetLayout = ({
       showEmptyState={showEmptyState}
       onDrawerExpandChange={handleDrawerExpandChange}
       onActiveWidgetsChange={handleActiveWidgetsChange}
+      droppingWidgetType={droppingWidgetType}
     />
   );
 
@@ -84,6 +86,8 @@ const WidgetLayout = ({
       isOpen={drawerOpen}
       onOpenChange={setDrawerOpen}
       instructionText={drawerInstructionText}
+      onWidgetDragStart={setDroppingWidgetType}
+      onWidgetDragEnd={() => setDroppingWidgetType(undefined)}
     >
       {gridLayout}
     </WidgetDrawer>

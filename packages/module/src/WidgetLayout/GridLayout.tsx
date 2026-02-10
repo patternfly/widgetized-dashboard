@@ -1,8 +1,8 @@
 import 'react-grid-layout/css/styles.css';
 import './styles';
-import ReactGridLayout, { Layout, ReactGridLayoutProps } from 'react-grid-layout';
+import ReactGridLayout, { useContainerWidth, LayoutItem } from 'react-grid-layout';
 import GridTile, { SetWidgetAttribute } from './GridTile';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { isWidgetType } from './utils';
 import React from 'react';
 import {
@@ -30,8 +30,8 @@ const createSerializableConfig = (config?: WidgetConfiguration) => {
 // SVG resize handle as inline data URI
 const resizeHandleSvg = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE2IDEuMTQyODZMMTQuODU3MSAwTDAgMTQuODU3MVYxNkgxLjE0Mjg2TDE2IDEuMTQyODZaIiBmaWxsPSIjRDJEMkQyIi8+Cjwvc3ZnPgo=';
 
-const getResizeHandle = (resizeHandleAxis: string, ref: React.Ref<HTMLDivElement>) => (
-    <div ref={ref} className={`react-resizable-handle react-resizable-handle-${resizeHandleAxis}`}>
+const getResizeHandle = (resizeHandleAxis: string, ref: React.Ref<HTMLElement>) => (
+    <div ref={ref as React.Ref<HTMLDivElement>} className={`react-resizable-handle react-resizable-handle-${resizeHandleAxis}`}>
       <img src={resizeHandleSvg} alt="Resize handle" />
     </div>
   );
@@ -57,6 +57,8 @@ export interface GridLayoutProps {
   onDrawerExpandChange?: (expanded: boolean) => void;
   /** Currently active widgets (for tracking) */
   onActiveWidgetsChange?: (widgetTypes: string[]) => void;
+  /** Widget type currently being dragged from drawer */
+  droppingWidgetType?: string;
 }
 
 const LayoutEmptyState = ({
@@ -100,14 +102,15 @@ const GridLayout = ({
   showEmptyState = true,
   onDrawerExpandChange,
   onActiveWidgetsChange,
+  droppingWidgetType,
 }: GridLayoutProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isInitialRender, setIsInitialRender] = useState(true);
   const [layoutVariant, setLayoutVariant] = useState<Variants>('xl');
-  const [layoutWidth, setLayoutWidth] = useState<number>(1200);
-  const layoutRef = useRef<HTMLDivElement>(null);
+  
+  // Use v2 hook for container width measurement
+  const { width: layoutWidth, containerRef, mounted } = useContainerWidth();
 
-  const [currentDropInItem, setCurrentDropInItem] = useState<string | undefined>();
   const [internalTemplate, setInternalTemplate] = useState<ExtendedTemplateConfig>(template);
 
   // Sync external template changes to internal state
@@ -115,20 +118,19 @@ const GridLayout = ({
     setInternalTemplate(template);
   }, [template]);
 
-  const droppingItemTemplate: ReactGridLayoutProps['droppingItem'] = useMemo(() => {
-    if (currentDropInItem && isWidgetType(widgetMapping, currentDropInItem)) {
-      const widget = widgetMapping[currentDropInItem];
+  const droppingItemTemplate = useMemo(() => {
+    if (droppingWidgetType && isWidgetType(widgetMapping, droppingWidgetType)) {
+      const widget = widgetMapping[droppingWidgetType];
       if (!widget) {return undefined;}
       return {
         ...widget.defaults,
         i: droppingElemId,
-        widgetType: currentDropInItem,
-        title: 'New title',
-        config: createSerializableConfig(widget.config)
+        x: 0,
+        y: 0,
       };
     }
     return undefined;
-  }, [currentDropInItem, widgetMapping]);
+  }, [droppingWidgetType, widgetMapping]);
 
   const setWidgetAttribute: SetWidgetAttribute = (id, attributeName, value) => {
     const newTemplate = Object.entries(internalTemplate).reduce(
@@ -154,10 +156,11 @@ const GridLayout = ({
     onTemplateChange?.(newTemplate);
   };
 
-  const onDrop: ReactGridLayoutProps['onDrop'] = (_layout: ExtendedLayoutItem[], layoutItem: ExtendedLayoutItem, event: DragEvent) => {
-    const data = event.dataTransfer?.getData('text') || '';
+  const onDrop = (_layout: readonly LayoutItem[], layoutItem: LayoutItem | undefined, event: Event) => {
+    if (!layoutItem) return;
+    const dragEvent = event as DragEvent;
+    const data = dragEvent.dataTransfer?.getData('text') || '';
     if (isWidgetType(widgetMapping, data)) {
-      setCurrentDropInItem(undefined);
       const widget = widgetMapping[data];
       if (!widget) {return;}
       const newTemplate = Object.entries(internalTemplate).reduce((acc, [size, layout]) => {
@@ -193,21 +196,22 @@ const GridLayout = ({
       onTemplateChange?.(newTemplate);
       analytics?.('widget-layout.widget-add', { data });
     }
-    event.preventDefault();
+    dragEvent.preventDefault();
   };
 
-  const onLayoutChange = (currentLayout: Layout[]) => {
+  const onLayoutChange = (currentLayout: readonly LayoutItem[]) => {
     if (isInitialRender) {
       setIsInitialRender(false);
       const activeWidgets = activeLayout.map((item) => item.widgetType);
       onActiveWidgetsChange?.(activeWidgets);
       return;
     }
-    if (isLayoutLocked || currentDropInItem) {
+    if (isLayoutLocked || droppingWidgetType) {
       return;
     }
 
-    const newTemplate = extendLayout({ ...internalTemplate, [layoutVariant]: currentLayout });
+    // Create mutable copy of readonly layout for extendLayout
+    const newTemplate = extendLayout({ ...internalTemplate, [layoutVariant]: [...currentLayout] });
     const activeWidgets = activeLayout.map((item) => item.widgetType);
     onActiveWidgetsChange?.(activeWidgets);
     
@@ -215,54 +219,47 @@ const GridLayout = ({
     onTemplateChange?.(newTemplate);
   };
 
+  // Update layout variant when container width changes
   useEffect(() => {
-    const currentWidth = layoutRef.current?.getBoundingClientRect().width ?? 1200;
-    const variant: Variants = getGridDimensions(currentWidth);
-    setLayoutVariant(variant);
-    setLayoutWidth(currentWidth);
-    
-    const observer = new ResizeObserver((entries) => {
-      if (!entries[0]) {return;}
-
-      const currentWidth = entries[0].contentRect.width;
-      const variant: Variants = getGridDimensions(currentWidth);
+    if (mounted && layoutWidth > 0) {
+      const variant: Variants = getGridDimensions(layoutWidth);
       setLayoutVariant(variant);
-      setLayoutWidth(currentWidth);
-    });
-    
-    if (layoutRef.current) {
-      observer.observe(layoutRef.current);
     }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
+  }, [layoutWidth, mounted]);
 
   const activeLayout = internalTemplate[layoutVariant] || [];
   
+  // Use default width before mount, actual width after
+  const effectiveWidth = mounted && layoutWidth > 0 ? layoutWidth : 1200;
+  
   return (
-    <div id="widget-layout-container" style={{ position: 'relative' }} ref={layoutRef}>
-      {activeLayout.length === 0 && !currentDropInItem && showEmptyState && (
+    <div id="widget-layout-container" style={{ position: 'relative' }} ref={containerRef}>
+      {activeLayout.length === 0 && !droppingWidgetType && showEmptyState && (
         emptyStateComponent || <LayoutEmptyState onDrawerExpandChange={onDrawerExpandChange} documentationLink={documentationLink} />
       )}
-      <ReactGridLayout
+      {mounted && <ReactGridLayout
         key={'grid-' + layoutVariant}
-        draggableHandle=".drag-handle"
         layout={internalTemplate[layoutVariant]}
-        cols={columns[layoutVariant]}
-        rowHeight={56}
-        width={layoutWidth}
-        isDraggable={!isLayoutLocked}
-        isResizable={!isLayoutLocked}
-        resizeHandle={getResizeHandle as unknown as ReactGridLayoutProps['resizeHandle']}
-        resizeHandles={['sw', 'nw', 'se', 'ne']}
+        width={effectiveWidth}
         droppingItem={droppingItemTemplate}
-        isDroppable={!isLayoutLocked}
+        gridConfig={{
+          cols: columns[layoutVariant],
+          rowHeight: 56,
+        }}
+        dragConfig={{
+          handle: '.drag-handle',
+          enabled: !isLayoutLocked,
+        }}
+        resizeConfig={{
+          enabled: !isLayoutLocked,
+          handles: ['s', 'w', 'e', 'n', 'sw', 'nw', 'se', 'ne'],
+          handleComponent: getResizeHandle,
+        }}
+        dropConfig={{
+          enabled: !isLayoutLocked,
+        }}
         onDrop={onDrop}
-        onDragStart={() => setCurrentDropInItem(undefined)}
-        useCSSTransforms
-        verticalCompact
+        onDragStart={() => {}}
         onLayoutChange={onLayoutChange}
       >
         {activeLayout
@@ -279,7 +276,7 @@ const GridLayout = ({
                   isDragging={isDragging}
                   setIsDragging={setIsDragging}
                   widgetType={widgetType}
-                  widgetConfig={{ ...layoutItem, colWidth: layoutWidth / columns[layoutVariant], config }}
+                  widgetConfig={{ ...layoutItem, colWidth: effectiveWidth / columns[layoutVariant], config }}
                   setWidgetAttribute={setWidgetAttribute}
                   removeWidget={removeWidget}
                   analytics={analytics}
@@ -290,7 +287,7 @@ const GridLayout = ({
             );
           })
           .filter((layoutItem) => layoutItem !== null)}
-      </ReactGridLayout>
+      </ReactGridLayout>}
     </div>
   );
 };
