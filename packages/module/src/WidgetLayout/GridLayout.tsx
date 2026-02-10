@@ -20,7 +20,7 @@ import { columns, breakpoints, droppingElemId, getWidgetIdentifier, extendLayout
 export const defaultBreakpoints = breakpoints;
 
 const createSerializableConfig = (config?: WidgetConfiguration) => {
-  if (!config) return undefined;
+  if (!config) { return undefined; }
   return {
     ...(config.title && { title: config.title }),
     ...(config.headerLink && { headerLink: config.headerLink })
@@ -157,7 +157,7 @@ const GridLayout = ({
   };
 
   const onDrop = (_layout: readonly LayoutItem[], layoutItem: LayoutItem | undefined, event: Event) => {
-    if (!layoutItem) return;
+    if (!layoutItem) { return; }
     const dragEvent = event as DragEvent;
     const data = dragEvent.dataTransfer?.getData('text') || '';
     if (isWidgetType(widgetMapping, data)) {
