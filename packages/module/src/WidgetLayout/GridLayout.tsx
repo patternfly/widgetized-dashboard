@@ -20,7 +20,7 @@ import { columns, breakpoints, droppingElemId, getWidgetIdentifier, extendLayout
 export const defaultBreakpoints = breakpoints;
 
 const createSerializableConfig = (config?: WidgetConfiguration) => {
-  if (!config) return undefined;
+  if (!config) {return undefined;}
   return {
     ...(config.title && { title: config.title }),
     ...(config.headerLink && { headerLink: config.headerLink })
