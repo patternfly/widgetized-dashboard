@@ -4,7 +4,6 @@ import {
   CardBody,
   CardHeader,
   CardTitle,
-  Divider,
   Dropdown,
   DropdownItem,
   DropdownList,
@@ -18,7 +17,13 @@ import {
   Skeleton,
   Tooltip,
 } from '@patternfly/react-core';
-import { CompressIcon, EllipsisVIcon, ExpandIcon, GripVerticalIcon, LockIcon, MinusCircleIcon, UnlockIcon } from '@patternfly/react-icons';
+import CompressIcon from '@patternfly/react-icons/dist/esm/icons/compress-icon';
+import EllipsisVIcon from '@patternfly/react-icons/dist/esm/icons/ellipsis-v-icon';
+import ExpandIcon from '@patternfly/react-icons/dist/esm/icons/expand-icon';
+import GripVerticalIcon from '@patternfly/react-icons/dist/esm/icons/grip-vertical-icon';
+import LockIcon from '@patternfly/react-icons/dist/esm/icons/lock-icon';
+import MinusCircleIcon from '@patternfly/react-icons/dist/esm/icons/minus-circle-icon';
+import UnlockIcon from '@patternfly/react-icons/dist/esm/icons/unlock-icon';
 import React, { useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { Layout } from 'react-grid-layout';
@@ -87,7 +92,7 @@ const GridTile = ({
           {widgetConfig.static ? 'Unlock location and size' : 'Lock location and size'}
         </DropdownItem>
         <DropdownItem
-          ouiaId="autosize-widget"
+          ouiaId="maximize-widget"
           isDisabled={isMaximized || widgetConfig.static}
           onClick={() => {
             setWidgetAttribute(widgetConfig.i, 'h', widgetConfig.maxH ?? widgetConfig.h);
@@ -95,7 +100,7 @@ const GridTile = ({
           }}
           icon={<ExpandIcon />}
         >
-          Autosize height to content
+          Maximize height
         </DropdownItem>
         <DropdownItem
           ouiaId="minimize-widget"
@@ -115,7 +120,7 @@ const GridTile = ({
             analytics?.('widget-layout.widget-remove', { widgetType });
           }}
           icon={
-            <Icon className="pf-v6-u-pb-2xl" status={widgetConfig.static ? undefined : 'danger'}>
+            <Icon className="pf-v6-widget-grid-tile__remove-icon" status={widgetConfig.static ? undefined : 'danger'}>
               <MinusCircleIcon />
             </Icon>
           }
@@ -123,7 +128,7 @@ const GridTile = ({
         >
           Remove
           <HelperText>
-            <HelperTextItem className="pf-v6-u-text-wrap">
+            <HelperTextItem className="pf-v6-widget-grid-tile__remove-helper-text">
               {"All 'removed' widgets can be added back by clicking the 'Add widgets' button."}
             </HelperTextItem>
           </HelperText>
@@ -134,8 +139,7 @@ const GridTile = ({
 
   const headerActions = (
     <>
-      <Tooltip content={<p>Actions</p>}>
-        <Dropdown
+      <Dropdown
           ouiaId={`${widgetType}-widget`}
           popperProps={{
             appendTo: document.body,
@@ -144,11 +148,12 @@ const GridTile = ({
           }}
           toggle={(toggleRef: React.Ref<MenuToggleElement>) => (
             <MenuToggle
+              className="pf-v6-widget-grid-tile__menu-toggle"
               ref={toggleRef}
               isExpanded={isOpen}
               onClick={() => setIsOpen((prev) => !prev)}
               variant="plain"
-              aria-label="widget actions menu toggle"
+              aria-label="Widget actions"
             >
               <EllipsisVIcon aria-hidden="true" />
             </MenuToggle>
@@ -158,19 +163,18 @@ const GridTile = ({
         >
           <DropdownList>{dropdownItems}</DropdownList>
         </Dropdown>
-      </Tooltip>
-      <Tooltip aria-label="Move widget" content={<p>{widgetConfig.static ? 'Widget locked' : 'Move'}</p>}>
+      <Tooltip content={<p>{widgetConfig.static ? 'Widget locked' : 'Move'}</p>}>
         <Icon
           onMouseDown={() => {
             setIsDragging(true);
             analytics?.('widget-layout.widget-move', { widgetType });
           }}
           onMouseUp={() => setIsDragging(false)}
-          className={clsx('drag-handle', {
-            dragging: isDragging,
+          className={clsx('pf-v6-widget-drag-handle', {
+            'pf-v6-widget-drag-handle--dragging': isDragging,
           })}
         >
-          <GripVerticalIcon style={{ fill: 'var(--pf-t--global--icon--color--subtle)' }} />
+          <GripVerticalIcon />
         </Icon>
       </Tooltip>
     </>
@@ -180,25 +184,24 @@ const GridTile = ({
     <Card
       {...widgetConfig.config?.wrapperProps}
       ouiaId={`${widgetType}-widget`}
-      className={clsx('grid-tile', widgetConfig.config?.wrapperProps?.className, {
-        static: widgetConfig.static,
+      className={clsx('pf-v6-widget-grid-tile', widgetConfig.config?.wrapperProps?.className, {
+        'pf-v6-widget-grid-tile--static': widgetConfig.static,
       })}
     >
-      <CardHeader className="pf-v6-u-pr-lg" actions={{ actions: headerActions }}>
+      <CardHeader className="pf-v6-widget-grid-tile__header" actions={{ actions: headerActions }}>
         <Flex>
-          <Flex className="pf-v6-u-flex-direction-row pf-v6-u-flex-nowrap">
+          <Flex className="pf-v6-widget-header-layout">
             {widgetConfig?.config?.icon && (
-              <div className="pf-v6-u-align-self-flex-start widg-c-icon--header pf-v6-u-mr-sm">
+              <Icon size="md">
                 {isLoaded ? widgetConfig.config.icon : <Skeleton shape="circle" width="25px" height="25px" />}
-              </div>
+              </Icon>
             )}
-            <Flex className="pf-v6-u-flex-direction-row widg-card-header-text">
+            <Flex className="pf-v6-widget-card-header-text">
               {isLoaded ? (
                 <CardTitle
-                  style={{
-                    userSelect: isDragging ? 'none' : 'auto',
-                  }}
-                  className="pf-v6-u-align-self-flex-start"
+                  className={clsx('pf-v6-widget-grid-tile__title', {
+                    'pf-v6-widget-grid-tile__title--dragging': isDragging,
+                  })}
                 >
                   {widgetConfig?.config?.title || widgetType}
                 </CardTitle>
@@ -208,7 +211,7 @@ const GridTile = ({
               {hasHeader && isLoaded && (
                 <FlexItem>
                   <Button
-                    className="pf-v6-u-font-weight-bold pf-v6-u-font-size-xs pf-v6-u-p-0"
+                    className="pf-v6-widget-grid-tile__header-link"
                     variant="link"
                     component="a"
                     href={linkHref}
@@ -222,11 +225,9 @@ const GridTile = ({
           </Flex>
         </Flex>
       </CardHeader>
-      <Divider />
-      <CardBody {...widgetConfig.config?.cardBodyProps} className={clsx('pf-v6-u-p-0', widgetConfig.config?.cardBodyProps?.className)}>{children}</CardBody>
+      <CardBody {...widgetConfig.config?.cardBodyProps} className={clsx('pf-v6-widget-grid-tile__body', widgetConfig.config?.cardBodyProps?.className)}>{children}</CardBody>
     </Card>
   );
 };
 
 export default GridTile;
-

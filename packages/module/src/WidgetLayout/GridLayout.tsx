@@ -1,5 +1,4 @@
 import 'react-grid-layout/css/styles.css';
-import './styles';
 import ReactGridLayout, { Layout, ReactGridLayoutProps } from 'react-grid-layout';
 import GridTile, { SetWidgetAttribute } from './GridTile';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -14,7 +13,9 @@ import {
   WidgetConfiguration,
 } from './types';
 import { Button, EmptyState, EmptyStateActions, EmptyStateBody, EmptyStateVariant, PageSection } from '@patternfly/react-core';
-import { ExternalLinkAltIcon, GripVerticalIcon, PlusCircleIcon } from '@patternfly/react-icons';
+import ExternalLinkAltIcon from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
+import GripVerticalIcon from '@patternfly/react-icons/dist/esm/icons/grip-vertical-icon';
+import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
 import { columns, breakpoints, droppingElemId, getWidgetIdentifier, extendLayout, getGridDimensions } from './utils';
 
 export const defaultBreakpoints = breakpoints;
@@ -27,12 +28,11 @@ const createSerializableConfig = (config?: WidgetConfiguration) => {
   };
 };
 
-// SVG resize handle as inline data URI
-const resizeHandleSvg = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE2IDEuMTQyODZMMTQuODU3MSAwTDAgMTQuODU3MVYxNkgxLjE0Mjg2TDE2IDEuMTQyODZaIiBmaWxsPSIjRDJEMkQyIi8+Cjwvc3ZnPgo=';
-
 const getResizeHandle = (resizeHandleAxis: string, ref: React.Ref<HTMLDivElement>) => (
     <div ref={ref} className={`react-resizable-handle react-resizable-handle-${resizeHandleAxis}`}>
-      <img src={resizeHandleSvg} alt="Resize handle" />
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M16 1.14286L14.8571 0L0 14.8571V16H1.14286L16 1.14286Z" fill="currentColor" />
+      </svg>
     </div>
   );
 
@@ -71,15 +71,15 @@ const LayoutEmptyState = ({
   }, [onDrawerExpandChange]);
 
   return (
-    <PageSection hasBodyWrapper={false} className="empty-layout pf-v6-u-p-0">
-      <EmptyState headingLevel="h2" icon={PlusCircleIcon} titleText="No dashboard content" variant={EmptyStateVariant.lg} className="pf-v6-u-p-sm">
+    <PageSection hasBodyWrapper={false} className="pf-v6-widget-empty-layout">
+      <EmptyState headingLevel="h2" icon={PlusCircleIcon} titleText="No dashboard content" variant={EmptyStateVariant.lg} className="pf-v6-widget-empty-state">
         <EmptyStateBody>
           You don't have any widgets on your dashboard. To populate your dashboard, drag <GripVerticalIcon /> items from the widget drawer to this
           dashboard.
         </EmptyStateBody>
         {documentationLink && (
           <EmptyStateActions>
-            <Button variant="link" icon={<ExternalLinkAltIcon />} iconPosition="end" component="a" href={documentationLink} target="_blank">
+            <Button variant="link" icon={<ExternalLinkAltIcon />} iconPosition="end" component="a" href={documentationLink} target="_blank" rel="noopener noreferrer">
               Learn more about widget dashboard
             </Button>
           </EmptyStateActions>
@@ -242,13 +242,13 @@ const GridLayout = ({
   const activeLayout = internalTemplate[layoutVariant] || [];
   
   return (
-    <div id="widget-layout-container" style={{ position: 'relative' }} ref={layoutRef}>
+    <div className="pf-v6-widget-layout-container" ref={layoutRef}>
       {activeLayout.length === 0 && !currentDropInItem && showEmptyState && (
         emptyStateComponent || <LayoutEmptyState onDrawerExpandChange={onDrawerExpandChange} documentationLink={documentationLink} />
       )}
       <ReactGridLayout
         key={'grid-' + layoutVariant}
-        draggableHandle=".drag-handle"
+        draggableHandle=".pf-v6-widget-drag-handle"
         layout={internalTemplate[layoutVariant]}
         cols={columns[layoutVariant]}
         rowHeight={56}
@@ -266,7 +266,7 @@ const GridLayout = ({
         onLayoutChange={onLayoutChange}
       >
         {activeLayout
-          .map((layoutItem, index) => {
+          .map((layoutItem) => {
             const { widgetType } = layoutItem;
             const widget = widgetMapping[widgetType];
             if (!widget) {
@@ -274,12 +274,18 @@ const GridLayout = ({
             }
             const config = widgetMapping[widgetType]?.config;
             return (
-              <div key={layoutItem.i} data-grid={layoutItem} tabIndex={index} className={`widget-columns-${layoutItem.w} widget-rows-${layoutItem.h}`}>
+              <div key={layoutItem.i} data-grid={layoutItem} className={`pf-v6-widget-columns-${layoutItem.w} pf-v6-widget-rows-${layoutItem.h}`}>
                 <GridTile
                   isDragging={isDragging}
                   setIsDragging={setIsDragging}
                   widgetType={widgetType}
-                  widgetConfig={{ ...layoutItem, colWidth: layoutWidth / columns[layoutVariant], config }}
+                  widgetConfig={{
+                    ...layoutItem,
+                    colWidth: layoutWidth / columns[layoutVariant],
+                    config,
+                    maxH: layoutItem.maxH ?? widget.defaults.maxH,
+                    minH: layoutItem.minH ?? widget.defaults.minH,
+                  }}
                   setWidgetAttribute={setWidgetAttribute}
                   removeWidget={removeWidget}
                   analytics={analytics}

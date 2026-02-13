@@ -5,8 +5,8 @@
   "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
   "scripts": {
-    "build": "tsc --build --verbose ./tsconfig.json",
-    "build:watch": "tsc --build --verbose --watch ./tsconfig.json",
+    "build": "tsc --build --verbose ./tsconfig.json && cp src/styles.css dist/esm/styles.css",
+    "build:watch": "tsc --build --verbose --watch ./tsconfig.json & nodemon --watch src/styles.css --exec 'cp src/styles.css dist/esm/styles.css'",
     "build:fed:packages": "node generate-fed-package-json.js",
     "clean": "rimraf dist",
     "docs:develop": "pf-docs-framework start",
@@ -36,8 +36,8 @@
     "react-grid-layout": "^1.5.1"
   },
   "peerDependencies": {
-    "react": "^18",
-    "react-dom": "^18"
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",

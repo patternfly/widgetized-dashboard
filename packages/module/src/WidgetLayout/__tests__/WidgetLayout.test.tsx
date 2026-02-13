@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import WidgetLayout from '../WidgetLayout';
 import { WidgetMapping, ExtendedTemplateConfig } from '../types';
-import { CubeIcon } from '@patternfly/react-icons';
+import CubeIcon from '@patternfly/react-icons/dist/esm/icons/cube-icon';
 
 const mockWidgetMapping: WidgetMapping = {
   'test-widget': {

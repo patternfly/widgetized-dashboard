@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import GridLayout from './GridLayout';
 import WidgetDrawer from './WidgetDrawer';
+import AddWidgetsButton from './AddWidgetsButton';
 import { ExtendedTemplateConfig, WidgetMapping, AnalyticsTracker } from './types';
 
 export interface WidgetLayoutProps {
@@ -78,15 +80,24 @@ const WidgetLayout = ({
   }
 
   return (
-    <WidgetDrawer
-      widgetMapping={widgetMapping}
-      currentlyUsedWidgets={currentlyUsedWidgets}
-      isOpen={drawerOpen}
-      onOpenChange={setDrawerOpen}
-      instructionText={drawerInstructionText}
-    >
-      {gridLayout}
-    </WidgetDrawer>
+    <>
+      <Toolbar isSticky>
+        <ToolbarContent>
+          <ToolbarItem align={{ default: 'alignEnd' }}>
+            <AddWidgetsButton onClick={() => setDrawerOpen(!drawerOpen)} />
+          </ToolbarItem>
+        </ToolbarContent>
+      </Toolbar>
+      <WidgetDrawer
+        widgetMapping={widgetMapping}
+        currentlyUsedWidgets={currentlyUsedWidgets}
+        isOpen={drawerOpen}
+        onOpenChange={setDrawerOpen}
+        instructionText={drawerInstructionText}
+      >
+        {gridLayout}
+      </WidgetDrawer>
+    </>
   );
 };
 
