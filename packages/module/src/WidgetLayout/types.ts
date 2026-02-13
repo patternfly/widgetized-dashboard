@@ -1,11 +1,11 @@
-import { Layout } from 'react-grid-layout';
+import type { LayoutItem } from 'react-grid-layout';
 import { CardProps, CardBodyProps } from '@patternfly/react-core';
 
 export const widgetIdSeparator = '#';
 
 export type Variants = 'sm' | 'md' | 'lg' | 'xl';
 
-export type LayoutWithTitle = Layout & { title: string };
+export type LayoutWithTitle = LayoutItem & { title: string };
 
 export type TemplateConfig = {
   [k in Variants]: LayoutWithTitle[];

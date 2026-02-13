@@ -26,7 +26,7 @@ import MinusCircleIcon from '@patternfly/react-icons/dist/esm/icons/minus-circle
 import UnlockIcon from '@patternfly/react-icons/dist/esm/icons/unlock-icon';
 import React, { useMemo, useState } from 'react';
 import clsx from 'clsx';
-import { Layout } from 'react-grid-layout';
+import type { LayoutItem } from 'react-grid-layout';
 import { ExtendedLayoutItem, WidgetConfiguration, AnalyticsTracker } from './types';
 
 export type SetWidgetAttribute = <T extends string | number | boolean>(id: string, attributeName: keyof ExtendedLayoutItem, value: T) => void;
@@ -37,7 +37,7 @@ export type GridTileProps = React.PropsWithChildren<{
   setIsDragging: (isDragging: boolean) => void;
   isDragging: boolean;
   setWidgetAttribute: SetWidgetAttribute;
-  widgetConfig: Layout & {
+  widgetConfig: LayoutItem & {
     colWidth: number;
     locked?: boolean;
     config?: WidgetConfiguration;

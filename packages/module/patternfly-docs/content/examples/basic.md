@@ -90,12 +90,29 @@ const widgetMapping: WidgetMapping = {
     defaults: { w: 2, h: 3, maxH: 6, minH: 2 },
     config: {
       title: 'My Widget',
-      icon: <MyIcon />
+      icon: <MyIcon />,
+      headerLink: {
+        title: 'View details',
+        href: '/details'
+      }
     },
     renderWidget: (id) => <MyWidgetContent />
   }
 };
 ```
+
+### Widget configuration options
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `defaults.w` | `number` | Default width in grid columns |
+| `defaults.h` | `number` | Default height in grid rows |
+| `defaults.maxH` | `number` | Maximum height the widget can be resized to |
+| `defaults.minH` | `number` | Minimum height the widget can be resized to |
+| `config.title` | `string` | Widget title displayed in the header |
+| `config.icon` | `ReactNode` | Icon displayed next to the title |
+| `config.headerLink` | `{ title: string, href: string }` | Optional link displayed in the widget header |
+| `renderWidget` | `(id: string) => ReactNode` | Function that renders the widget content |
 
 ## Template configuration
 
@@ -113,3 +130,29 @@ const initialTemplate: ExtendedTemplateConfig = {
 ```
 
 Each breakpoint (xl, lg, md, sm) should have its own layout configuration to ensure proper responsive behavior.
+
+### Layout item properties
+
+#### Required properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `i` | `string` | Unique identifier in format `widgetType#uuid` (e.g., `'my-widget#1'`) |
+| `x` | `number` | X position in grid columns (0-indexed from left) |
+| `y` | `number` | Y position in grid rows (0-indexed from top) |
+| `w` | `number` | Width in grid columns |
+| `h` | `number` | Height in grid rows |
+| `widgetType` | `string` | Must match a key in `widgetMapping` |
+| `title` | `string` | Display title for this widget instance |
+
+#### Optional properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `minW` | `number` | Minimum width during resize |
+| `maxW` | `number` | Maximum width during resize |
+| `minH` | `number` | Minimum height during resize |
+| `maxH` | `number` | Maximum height during resize |
+| `static` | `boolean` | If `true`, widget cannot be moved or resized |
+| `locked` | `boolean` | If `true`, widget is locked in place |
+| `config` | `WidgetConfiguration` | Override the widget's default config for this instance |
