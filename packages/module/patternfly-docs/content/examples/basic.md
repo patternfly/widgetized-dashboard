@@ -9,15 +9,42 @@ id: Widgetized dashboard
 source: react
 # If you use typescript, the name of the interface to display props for
 # These are found through the sourceProps function provided in patternfly-docs.source.js
-propComponents: ['WidgetLayout', 'GridLayout', 'WidgetDrawer']
+propComponents: ['WidgetLayout', 'GridLayout', 'WidgetDrawer', 'AddWidgetsButton']
 sortValue: 1
 sourceLink: https://github.com/patternfly/widgetized-dashboard
 --- 
 
 import { FunctionComponent, useState } from 'react';
-import { ExternalLinkAltIcon, ArrowRightIcon, CubeIcon, ChartLineIcon, BellIcon } from '@patternfly/react-icons';
-import { Card, CardBody, CardFooter, Content, Icon } from '@patternfly/react-core';
-import { WidgetLayout, GridLayout, WidgetDrawer } from '@patternfly/widgetized-dashboard';
+import CubeIcon from '@patternfly/react-icons/dist/esm/icons/cube-icon';
+import ChartLineIcon from '@patternfly/react-icons/dist/esm/icons/chart-line-icon';
+import BellIcon from '@patternfly/react-icons/dist/esm/icons/bell-icon';
+import ShieldAltIcon from '@patternfly/react-icons/dist/esm/icons/shield-alt-icon';
+import LockIcon from '@patternfly/react-icons/dist/esm/icons/lock-icon';
+import LockOpenIcon from '@patternfly/react-icons/dist/esm/icons/lock-open-icon';
+import UndoIcon from '@patternfly/react-icons/dist/esm/icons/undo-icon';
+import ArrowRightIcon from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
+import ExternalLinkAltIcon from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Content,
+  ContentVariants,
+  DescriptionList,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
+  Icon,
+  List,
+  ListItem,
+  Toolbar,
+  ToolbarContent,
+  ToolbarGroup,
+  ToolbarItem,
+  Tooltip,
+} from '@patternfly/react-core';
+import { WidgetLayout, GridLayout, WidgetDrawer, AddWidgetsButton } from '@patternfly/widgetized-dashboard';
 
 ### Basic usage
 
@@ -37,11 +64,11 @@ Use `isLayoutLocked` to prevent users from modifying the layout.
 
 ```
 
-### Without drawer
+### Custom toolbar
 
-You can hide the widget drawer by setting `showDrawer={false}`.
+Use `GridLayout`, `WidgetDrawer`, and `AddWidgetsButton` directly to build a custom toolbar with lock/unlock, reset, and other controls.
 
-```js file="./WithoutDrawerExample.tsx"
+```js file="./CustomToolbarExample.tsx" isFullscreen
 
 ```
 
@@ -63,12 +90,29 @@ const widgetMapping: WidgetMapping = {
     defaults: { w: 2, h: 3, maxH: 6, minH: 2 },
     config: {
       title: 'My Widget',
-      icon: <MyIcon />
+      icon: <MyIcon />,
+      headerLink: {
+        title: 'View details',
+        href: '/details'
+      }
     },
     renderWidget: (id) => <MyWidgetContent />
   }
 };
 ```
+
+### Widget configuration options
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `defaults.w` | `number` | Default width in grid columns |
+| `defaults.h` | `number` | Default height in grid rows |
+| `defaults.maxH` | `number` | Maximum height the widget can be resized to |
+| `defaults.minH` | `number` | Minimum height the widget can be resized to |
+| `config.title` | `string` | Widget title displayed in the header |
+| `config.icon` | `ReactNode` | Icon displayed next to the title |
+| `config.headerLink` | `{ title: string, href: string }` | Optional link displayed in the widget header |
+| `renderWidget` | `(id: string) => ReactNode` | Function that renders the widget content |
 
 ## Template configuration
 
@@ -86,3 +130,29 @@ const initialTemplate: ExtendedTemplateConfig = {
 ```
 
 Each breakpoint (xl, lg, md, sm) should have its own layout configuration to ensure proper responsive behavior.
+
+### Layout item properties
+
+#### Required properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `i` | `string` | Unique identifier in format `widgetType#uuid` (e.g., `'my-widget#1'`) |
+| `x` | `number` | X position in grid columns (0-indexed from left) |
+| `y` | `number` | Y position in grid rows (0-indexed from top) |
+| `w` | `number` | Width in grid columns |
+| `h` | `number` | Height in grid rows |
+| `widgetType` | `string` | Must match a key in `widgetMapping` |
+| `title` | `string` | Display title for this widget instance |
+
+#### Optional properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `minW` | `number` | Minimum width during resize |
+| `maxW` | `number` | Maximum width during resize |
+| `minH` | `number` | Minimum height during resize |
+| `maxH` | `number` | Maximum height during resize |
+| `static` | `boolean` | If `true`, widget cannot be moved or resized |
+| `locked` | `boolean` | If `true`, widget is locked in place |
+| `config` | `WidgetConfiguration` | Override the widget's default config for this instance |

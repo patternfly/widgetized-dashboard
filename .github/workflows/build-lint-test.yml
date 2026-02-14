@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          if [[ ! -z "${GH_PR_NUM}" ]]; then 
+          if [[ ! -z "${GH_PR_NUM}" ]]; then
             echo "Checking out PR"
             git fetch origin pull/$GH_PR_NUM/head:tmp
             git checkout tmp
@@ -22,14 +22,16 @@ jobs:
         run: corepack enable
       - uses: actions/cache@v4
         id: yarn-cache
-        name: Cache npm deps
+        name: Load Yarn cache
         with:
           path: |
-           node_modules
-           **/node_modules
-          key: ${{ runner.os }}-yarn-14-${{ secrets.CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}
-      - run: yarn install --immutable
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
+            .yarn/cache
+          key: ${{ runner.os }}-yarn-cache-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-cache-
+      - name: Install dependencies
+        shell: bash
+        run: yarn install --immutable --network-timeout 100000
       - uses: actions/cache@v4
         id: dist
         name: Cache dist
@@ -48,7 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          if [[ ! -z "${GH_PR_NUM}" ]]; then 
+          if [[ ! -z "${GH_PR_NUM}" ]]; then
             echo "Checking out PR"
             git fetch origin pull/$GH_PR_NUM/head:tmp
             git checkout tmp
@@ -61,23 +63,22 @@ jobs:
         run: corepack enable
       - uses: actions/cache@v4
         id: yarn-cache
-        name: Cache npm deps
+        name: Load Yarn cache
         with:
           path: |
-           node_modules
-           **/node_modules
-          key: ${{ runner.os }}-yarn-14-${{ secrets.CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}
-      - run: yarn install --immutable
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
+            .yarn/cache
+          key: ${{ runner.os }}-yarn-cache-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-cache-
+      - name: Install dependencies
+        shell: bash
+        run: yarn install --immutable --network-timeout 100000
       - uses: actions/cache@v4
         id: lint-cache
         name: Load lint cache
         with:
           path: '.eslintcache'
           key: ${{ runner.os }}-lint-14-${{ secrets.CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}
-      - name: Enable Corepack
-        shell: bash
-        run: corepack enable
       - name: ESLint
         run: yarn lint:js
       - name: MDLint
@@ -91,7 +92,7 @@ jobs:
       - uses: actions/checkout@v4
       # Yes, we really want to checkout the PR
       - run: |
-          if [[ ! -z "${GH_PR_NUM}" ]]; then 
+          if [[ ! -z "${GH_PR_NUM}" ]]; then
             echo "Checking out PR"
             git fetch origin pull/$GH_PR_NUM/head:tmp
             git checkout tmp
@@ -104,23 +105,22 @@ jobs:
         run: corepack enable
       - uses: actions/cache@v4
         id: yarn-cache
-        name: Cache npm deps
+        name: Load Yarn cache
         with:
           path: |
-           node_modules
-           **/node_modules
-           ~/.cache/Cypress
-           ~/.cache/puppeteer
-          key: ${{ runner.os }}-yarn-14-${{ secrets.CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}
-      - run: yarn install --immutable
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
+            .yarn/cache
+          key: ${{ runner.os }}-yarn-cache-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-cache-
+      - name: Install dependencies
+        shell: bash
+        run: yarn install --immutable --network-timeout 100000
       - uses: actions/cache@v4
         id: dist
         name: Cache dist
         with:
           path: |
             packages/*/dist
-            packages/react-styles/css
           key: ${{ runner.os }}-dist-14-${{ secrets.CACHE_VERSION }}-${{ hashFiles('yarn.lock', 'package.json', 'packages/*/*', '!packages/*/dist', '!packages/*/node_modules') }}
       - name: Build dist
         run: yarn build
@@ -136,7 +136,7 @@ jobs:
       - uses: actions/checkout@v4
       # Yes, we really want to checkout the PR
       - run: |
-          if [[ ! -z "${GH_PR_NUM}" ]]; then 
+          if [[ ! -z "${GH_PR_NUM}" ]]; then
             echo "Checking out PR"
             git fetch origin pull/$GH_PR_NUM/head:tmp
             git checkout tmp
@@ -149,23 +149,23 @@ jobs:
         run: corepack enable
       - uses: actions/cache@v4
         id: yarn-cache
-        name: Cache npm deps
+        name: Load Yarn cache
         with:
           path: |
-           node_modules
-           **/node_modules
-           ~/.cache/Cypress
-           ~/.cache/puppeteer
-          key: ${{ runner.os }}-yarn-14-${{ secrets.CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}
-      - run: yarn install --immutable
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
+            .yarn/cache
+            ~/.cache/puppeteer
+          key: ${{ runner.os }}-yarn-cache-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-cache-
+      - name: Install dependencies
+        shell: bash
+        run: yarn install --immutable --network-timeout 100000
       - uses: actions/cache@v4
         id: dist
         name: Cache dist
         with:
           path: |
             packages/*/dist
-            packages/react-styles/css
           key: ${{ runner.os }}-dist-14-${{ secrets.CACHE_VERSION }}-${{ hashFiles('yarn.lock', 'package.json', 'packages/*/*', '!packages/*/dist', '!packages/*/node_modules') }}
       - name: Build dist
         run: yarn build

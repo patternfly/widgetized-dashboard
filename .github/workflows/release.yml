@@ -22,23 +22,22 @@ jobs:
         run: corepack enable
       - uses: actions/cache@v4
         id: yarn-cache
-        name: Cache npm deps
+        name: Load Yarn cache
         with:
           path: |
-           node_modules
-           **/node_modules
-           ~/.cache/Cypress
-           ~/.cache/puppeteer
-          key: ${{ runner.os }}-yarn-14-${{ secrets.CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}
-      - run: yarn install --immutable
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
+            .yarn/cache
+          key: ${{ runner.os }}-yarn-cache-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-cache-
+      - name: Install dependencies
+        shell: bash
+        run: yarn install --immutable --network-timeout 100000
       - uses: actions/cache@v4
         id: dist
         name: Cache dist
         with:
           path: |
             packages/*/dist
-            packages/react-styles/css
           key: ${{ runner.os }}-dist-14-${{ secrets.CACHE_VERSION }}-${{ hashFiles('yarn.lock', 'package.json', 'packages/*/*', '!packages/*/dist', '!packages/*/node_modules') }}
       - name: Build dist
         run: yarn build

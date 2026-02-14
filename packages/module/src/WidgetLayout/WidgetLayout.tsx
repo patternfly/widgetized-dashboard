@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { Toolbar, ToolbarContent, ToolbarItem } from '@patternfly/react-core';
 import GridLayout from './GridLayout';
 import WidgetDrawer from './WidgetDrawer';
+import AddWidgetsButton from './AddWidgetsButton';
 import { ExtendedTemplateConfig, WidgetMapping, AnalyticsTracker } from './types';
 
 export interface WidgetLayoutProps {
@@ -44,6 +46,7 @@ const WidgetLayout = ({
   const [template, setTemplate] = useState<ExtendedTemplateConfig>(initialTemplate);
   const [drawerOpen, setDrawerOpen] = useState(initialDrawerOpen);
   const [currentlyUsedWidgets, setCurrentlyUsedWidgets] = useState<string[]>([]);
+  const [droppingWidgetType, setDroppingWidgetType] = useState<string | undefined>();
 
   const handleTemplateChange = (newTemplate: ExtendedTemplateConfig) => {
     setTemplate(newTemplate);
@@ -70,6 +73,7 @@ const WidgetLayout = ({
       showEmptyState={showEmptyState}
       onDrawerExpandChange={handleDrawerExpandChange}
       onActiveWidgetsChange={handleActiveWidgetsChange}
+      droppingWidgetType={droppingWidgetType}
     />
   );
 
@@ -78,15 +82,26 @@ const WidgetLayout = ({
   }
 
   return (
-    <WidgetDrawer
-      widgetMapping={widgetMapping}
-      currentlyUsedWidgets={currentlyUsedWidgets}
-      isOpen={drawerOpen}
-      onOpenChange={setDrawerOpen}
-      instructionText={drawerInstructionText}
-    >
-      {gridLayout}
-    </WidgetDrawer>
+    <>
+      <Toolbar isSticky>
+        <ToolbarContent>
+          <ToolbarItem align={{ default: 'alignEnd' }}>
+            <AddWidgetsButton onClick={() => setDrawerOpen(!drawerOpen)} />
+          </ToolbarItem>
+        </ToolbarContent>
+      </Toolbar>
+      <WidgetDrawer
+        widgetMapping={widgetMapping}
+        currentlyUsedWidgets={currentlyUsedWidgets}
+        isOpen={drawerOpen}
+        onOpenChange={setDrawerOpen}
+        instructionText={drawerInstructionText}
+        onWidgetDragStart={setDroppingWidgetType}
+        onWidgetDragEnd={() => setDroppingWidgetType(undefined)}
+      >
+        {gridLayout}
+      </WidgetDrawer>
+    </>
   );
 };
 

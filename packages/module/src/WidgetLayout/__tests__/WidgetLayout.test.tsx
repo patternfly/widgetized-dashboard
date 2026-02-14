@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import WidgetLayout from '../WidgetLayout';
 import { WidgetMapping, ExtendedTemplateConfig } from '../types';
-import { CubeIcon } from '@patternfly/react-icons';
+import CubeIcon from '@patternfly/react-icons/dist/esm/icons/cube-icon';
 
 const mockWidgetMapping: WidgetMapping = {
   'test-widget': {
@@ -93,7 +93,7 @@ describe('WidgetLayout', () => {
     expect(screen.getByText('Test Widget')).toBeInTheDocument();
   });
 
-  it('accepts onTemplateChange callback', () => {
+  it('passes onTemplateChange callback to GridLayout', () => {
     const handleChange = jest.fn();
     render(
       <WidgetLayout
@@ -102,9 +102,8 @@ describe('WidgetLayout', () => {
         onTemplateChange={handleChange}
       />
     );
-    // Note: The callback may be called during initial layout setup
-    // This test just verifies the callback prop is accepted without errors
-    expect(handleChange).toBeDefined();
+    // onTemplateChange is invoked by GridLayout during initial layout setup
+    expect(handleChange).toHaveBeenCalled();
   });
 });
 

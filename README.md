@@ -29,12 +29,23 @@ This library requires React 18+ and React DOM 18+ as peer dependencies. Make sur
 yarn add react@^18 react-dom@^18
 ```
 
+## Styles
+
+Import the required stylesheet in your application entry point:
+
+```ts
+import '@patternfly/widgetized-dashboard/dist/esm/styles.css';
+```
+
+This stylesheet is required for the dashboard layout, drag-and-drop, and widget tile styling. You will also need PatternFly's base styles — see the [PatternFly getting started guide](https://www.patternfly.org/get-started/develop/) for details.
+
 ## Quick Start
 
 ```tsx
 import React from 'react';
 import { WidgetLayout, WidgetMapping, ExtendedTemplateConfig } from '@patternfly/widgetized-dashboard';
-import { CubeIcon } from '@patternfly/react-icons';
+import '@patternfly/widgetized-dashboard/dist/esm/styles.css';
+import CubeIcon from '@patternfly/react-icons/dist/esm/icons/cube-icon';
 
 // Define your widgets
 const widgetMapping: WidgetMapping = {
@@ -86,7 +97,7 @@ function App() {
 
 - [Basic Example](./packages/module/patternfly-docs/content/examples/BasicExample.tsx) - Complete dashboard with drawer
 - [Locked Layout Example](./packages/module/patternfly-docs/content/examples/LockedLayoutExample.tsx) - Dashboard with locked widgets
-- [Without Drawer Example](./packages/module/patternfly-docs/content/examples/WithoutDrawerExample.tsx) - Grid layout without widget drawer
+- [Custom Toolbar Example](./packages/module/patternfly-docs/content/examples/CustomToolbarExample.tsx) - Dashboard with custom toolbar controls
 
 ## Key Components
 

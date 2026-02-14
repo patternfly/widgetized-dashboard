@@ -14,7 +14,8 @@ import {
   Tooltip,
 } from '@patternfly/react-core';
 import React, { useState } from 'react';
-import { CloseIcon, GripVerticalIcon, PlusCircleIcon } from '@patternfly/react-icons';
+import CloseIcon from '@patternfly/react-icons/dist/esm/icons/close-icon';
+import GripVerticalIcon from '@patternfly/react-icons/dist/esm/icons/grip-vertical-icon';
 import { WidgetMapping, WidgetConfiguration } from './types';
 
 export type WidgetDrawerProps = React.PropsWithChildren<{
@@ -28,6 +29,10 @@ export type WidgetDrawerProps = React.PropsWithChildren<{
   onOpenChange?: (isOpen: boolean) => void;
   /** Custom instruction text */
   instructionText?: string;
+  /** Callback when widget drag starts from drawer */
+  onWidgetDragStart?: (widgetType: string) => void;
+  /** Callback when widget drag ends */
+  onWidgetDragEnd?: () => void;
 }>;
 
 const WidgetWrapper = ({ widgetType, config, onDragStart, onDragEnd }: {
@@ -38,12 +43,12 @@ const WidgetWrapper = ({ widgetType, config, onDragStart, onDragEnd }: {
 }) => {
   const headerActions = (
     <Tooltip content={<p>Drag to add widget</p>}>
-      <Icon className="pf-v6-u-pt-md widg-c-drawer__drag-handle">
-        <GripVerticalIcon style={{ fill: 'var(--pf-t--global--icon--color--subtle)' }} />
+      <Icon>
+        <GripVerticalIcon />
       </Icon>
     </Tooltip>
   );
-  
+
   return (
     <Card
       onDragStart={(e) => {
@@ -64,20 +69,20 @@ const WidgetWrapper = ({ widgetType, config, onDragStart, onDragEnd }: {
         onDragStart(widgetType);
       }}
       onDragEnd={onDragEnd}
-       
+
       unselectable="on"
       draggable={true}
-      className="grid-tile"
+      className="pf-v6-widget-grid-tile"
       ouiaId={`add-widget-card-${config?.title || widgetType}`}
     >
-      <CardHeader className="pf-v6-u-py-md widg-c-drawer__header" actions={{ actions: headerActions }}>
-        <Flex className="pf-v6-u-flex-direction-row pf-v6-u-flex-nowrap">
+      <CardHeader className="pf-v6-widget-drawer__header" actions={{ actions: headerActions, hasNoOffset: true }}>
+        <Flex className="pf-v6-widget-header-layout">
           {config?.icon && (
-            <div className="pf-v6-u-align-self-flex-start widg-c-icon--header pf-v6-u-mr-sm">
+            <Icon size="md">
               {config.icon}
-            </div>
+            </Icon>
           )}
-          <CardTitle className="pf-v6-u-align-self-flex-start">{config?.title || widgetType}</CardTitle>
+          <CardTitle className="pf-v6-widget-grid-tile__title">{config?.title || widgetType}</CardTitle>
         </Flex>
       </CardHeader>
     </Card>
@@ -91,9 +96,11 @@ const WidgetDrawer = ({
   isOpen: controlledIsOpen,
   onOpenChange,
   instructionText,
+  onWidgetDragStart,
+  onWidgetDragEnd,
 }: WidgetDrawerProps) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
-  
+
   // Use controlled state if provided, otherwise use internal state
   const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
   const setIsOpen = onOpenChange || setInternalIsOpen;
@@ -105,16 +112,16 @@ const WidgetDrawer = ({
   const panelContent = (
     <PageSection
       hasBodyWrapper={false}
-      className="widg-c-page__main-section--drawer pf-v6-u-p-md pf-v6-u-p-lg-on-sm pf-v6-u-background-color-secondary-default"
+      className="pf-v6-widget-page__main-section--drawer"
     >
-      <Split className="widg-l-split--add-widget">
+      <Split>
         <SplitItem isFilled>
-          <Title headingLevel="h2" size="md" className="pf-v6-u-pb-sm">
+          <Title headingLevel="h2" size="md" className="pf-v6-widget-drawer__title">
             {instructionText || (
               <>
-                {defaultInstructionText.split('icon').map((part, i) => 
-                  i === 0 ? part : (
-                    <React.Fragment key={i}>
+                {defaultInstructionText.split('icon').map((part, index) =>
+                  index === 0 ? part : (
+                    <React.Fragment key={`icon-${index}`}>
                       <GripVerticalIcon />
                       {part}
                     </React.Fragment>
@@ -127,7 +134,7 @@ const WidgetDrawer = ({
         <SplitItem>
           <Button
             variant="plain"
-            className="pf-v6-u-pt-0 pf-v6-u-pr-0"
+            className="pf-v6-widget-drawer__close-button"
             onClick={() => {
               setIsOpen(!isOpen);
             }}
@@ -136,32 +143,23 @@ const WidgetDrawer = ({
           />
         </SplitItem>
       </Split>
-      <Gallery className="widg-l-gallery pf-v6-u-pt-sm pf-v6-u-justify-content-center" hasGutter>
-        {filteredWidgetMapping.map(([type, widget], i) => (
-            <GalleryItem key={i}>
+      <Gallery className="pf-v6-widget-gallery" hasGutter>
+        {filteredWidgetMapping.map(([type, widget]) => (
+            <GalleryItem key={type}>
               <WidgetWrapper
                 widgetType={type}
                 config={widget.config}
-                onDragStart={() => {}}
-                onDragEnd={() => {}}
+                onDragStart={(widgetType) => onWidgetDragStart?.(widgetType)}
+                onDragEnd={() => onWidgetDragEnd?.()}
               />
             </GalleryItem>
           ))}
       </Gallery>
     </PageSection>
   );
-  
+
   return (
     <>
-      <div style={{ position: 'sticky', top: 0, zIndex: 100, display: 'flex', justifyContent: 'flex-end', padding: 'var(--pf-t--global--spacer--md)' }}>
-        <Button
-          variant='secondary'
-          onClick={() => setIsOpen(!isOpen)}
-          icon={<PlusCircleIcon />}
-        >
-          Add widgets
-        </Button>
-      </div>
       {isOpen && <div>{panelContent}</div>}
       {children}
     </>
@@ -169,4 +167,3 @@ const WidgetDrawer = ({
 };
 
 export default WidgetDrawer;
-
