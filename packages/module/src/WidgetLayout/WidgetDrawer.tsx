@@ -43,7 +43,7 @@ const WidgetWrapper = ({ widgetType, config, onDragStart, onDragEnd }: {
 }) => {
   const headerActions = (
     <Tooltip content={<p>Drag to add widget</p>}>
-      <Icon className="pf-v6-widget-drawer__drag-handle">
+      <Icon>
         <GripVerticalIcon />
       </Icon>
     </Tooltip>
@@ -75,7 +75,7 @@ const WidgetWrapper = ({ widgetType, config, onDragStart, onDragEnd }: {
       className="pf-v6-widget-grid-tile"
       ouiaId={`add-widget-card-${config?.title || widgetType}`}
     >
-      <CardHeader className="pf-v6-widget-drawer__header" actions={{ actions: headerActions }}>
+      <CardHeader className="pf-v6-widget-drawer__header" actions={{ actions: headerActions, hasNoOffset: true }}>
         <Flex className="pf-v6-widget-header-layout">
           {config?.icon && (
             <Icon size="md">
@@ -119,9 +119,9 @@ const WidgetDrawer = ({
           <Title headingLevel="h2" size="md" className="pf-v6-widget-drawer__title">
             {instructionText || (
               <>
-                {defaultInstructionText.split('icon').map((part, i) =>
-                  i === 0 ? part : (
-                    <React.Fragment key={i}>
+                {defaultInstructionText.split('icon').map((part, index) =>
+                  index === 0 ? part : (
+                    <React.Fragment key={`icon-${index}`}>
                       <GripVerticalIcon />
                       {part}
                     </React.Fragment>
@@ -144,8 +144,8 @@ const WidgetDrawer = ({
         </SplitItem>
       </Split>
       <Gallery className="pf-v6-widget-gallery" hasGutter>
-        {filteredWidgetMapping.map(([type, widget], i) => (
-            <GalleryItem key={i}>
+        {filteredWidgetMapping.map(([type, widget]) => (
+            <GalleryItem key={type}>
               <WidgetWrapper
                 widgetType={type}
                 config={widget.config}

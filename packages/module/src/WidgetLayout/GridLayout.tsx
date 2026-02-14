@@ -269,7 +269,7 @@ const GridLayout = ({
             if (!widget) {
               return null;
             }
-            const config = widgetMapping[widgetType]?.config;
+            const config = widget.config;
             return (
               <div key={layoutItem.i} data-grid={layoutItem} className={`pf-v6-widget-columns-${layoutItem.w} pf-v6-widget-rows-${layoutItem.h}`}>
                 <GridTile

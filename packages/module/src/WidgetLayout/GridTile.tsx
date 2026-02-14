@@ -9,8 +9,6 @@ import {
   DropdownList,
   Flex,
   FlexItem,
-  HelperText,
-  HelperTextItem,
   Icon,
   MenuToggle,
   MenuToggleElement,
@@ -120,18 +118,14 @@ const GridTile = ({
             analytics?.('widget-layout.widget-remove', { widgetType });
           }}
           icon={
-            <Icon className="pf-v6-widget-grid-tile__remove-icon" status={widgetConfig.static ? undefined : 'danger'}>
+            <Icon status={widgetConfig.static ? undefined : 'danger'}>
               <MinusCircleIcon />
             </Icon>
           }
           isDisabled={widgetConfig.static}
+          description="All 'removed' widgets can be added back by clicking the 'Add widgets' button."
         >
           Remove
-          <HelperText>
-            <HelperTextItem className="pf-v6-widget-grid-tile__remove-helper-text">
-              {"All 'removed' widgets can be added back by clicking the 'Add widgets' button."}
-            </HelperTextItem>
-          </HelperText>
         </DropdownItem>
       </>
     );
@@ -170,7 +164,7 @@ const GridTile = ({
             analytics?.('widget-layout.widget-move', { widgetType });
           }}
           onMouseUp={() => setIsDragging(false)}
-          className={clsx('pf-v6-widget-drag-handle', {
+          className={clsx({
             'pf-v6-widget-drag-handle--dragging': isDragging,
           })}
         >
@@ -188,7 +182,7 @@ const GridTile = ({
         'pf-v6-widget-grid-tile--static': widgetConfig.static,
       })}
     >
-      <CardHeader className="pf-v6-widget-grid-tile__header" actions={{ actions: headerActions }}>
+      <CardHeader className="pf-v6-widget-grid-tile__header" actions={{ actions: headerActions, hasNoOffset: true }}>
         <Flex>
           <Flex className="pf-v6-widget-header-layout">
             {widgetConfig?.config?.icon && (
@@ -216,6 +210,7 @@ const GridTile = ({
                     component="a"
                     href={linkHref}
                     target={linkTarget}
+                    {...(linkTarget === '_blank' && { rel: 'noopener noreferrer' })}
                   >
                     {headerLink.title}
                   </Button>

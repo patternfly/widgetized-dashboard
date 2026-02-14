@@ -93,7 +93,7 @@ describe('WidgetLayout', () => {
     expect(screen.getByText('Test Widget')).toBeInTheDocument();
   });
 
-  it('accepts onTemplateChange callback', () => {
+  it('passes onTemplateChange callback to GridLayout', () => {
     const handleChange = jest.fn();
     render(
       <WidgetLayout
@@ -102,9 +102,8 @@ describe('WidgetLayout', () => {
         onTemplateChange={handleChange}
       />
     );
-    // Note: The callback may be called during initial layout setup
-    // This test just verifies the callback prop is accepted without errors
-    expect(handleChange).toBeDefined();
+    // onTemplateChange is invoked by GridLayout during initial layout setup
+    expect(handleChange).toHaveBeenCalled();
   });
 });
 

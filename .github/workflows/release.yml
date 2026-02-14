@@ -19,16 +19,16 @@ jobs:
           node-version: '20'
       - name: Enable Corepack
         shell: bash
-        run: corepack enable
+        run: |
+          corepack enable
+          corepack prepare yarn@4.10.3 --activate
       - uses: actions/cache@v4
         id: yarn-cache
-        name: Cache npm deps
+        name: Cache yarn deps
         with:
           path: |
            node_modules
            **/node_modules
-           ~/.cache/Cypress
-           ~/.cache/puppeteer
           key: ${{ runner.os }}-yarn-14-${{ secrets.CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}
       - run: yarn install --immutable
         if: steps.yarn-cache.outputs.cache-hit != 'true'
@@ -38,7 +38,6 @@ jobs:
         with:
           path: |
             packages/*/dist
-            packages/react-styles/css
           key: ${{ runner.os }}-dist-14-${{ secrets.CACHE_VERSION }}-${{ hashFiles('yarn.lock', 'package.json', 'packages/*/*', '!packages/*/dist', '!packages/*/node_modules') }}
       - name: Build dist
         run: yarn build

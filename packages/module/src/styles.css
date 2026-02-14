@@ -23,6 +23,7 @@
   display: inherit;
 }
 
+/* Doubled class for specificity to override react-grid-layout defaults */
 .react-grid-item.react-grid-placeholder.react-grid-placeholder {
   background: var(--pf-t--global--color--nonstatus--blue--default);
   border-radius: var(--pf-t--global--border--radius--medium);
@@ -36,7 +37,6 @@
   width: 100%;
   height: 100%;
   display: block;
-  color: var(--pf-t--global--icon--color--subtle);
 }
 
 .pf-v6-widget-layout-container {
@@ -50,20 +50,11 @@
 }
 
 .pf-v6-widget-grid-tile {
-  --pf-v6-c-card__actions--PaddingInlineStart: var(--pf-t--global--spacer--xs);
-  background: var(--pf-t--global--background--color--primary--default);
-  position: relative;
   height: 100%;
-  overflow: hidden;
 }
 
 .pf-v6-widget-grid-tile .pf-v6-widget-drag-handle {
   cursor: grab;
-}
-
-.pf-v6-widget-grid-tile .pf-v6-widget-drag-handle svg,
-.pf-v6-widget-drawer__drag-handle svg {
-  fill: var(--pf-t--global--icon--color--subtle);
 }
 
 .pf-v6-widget-grid-tile .pf-v6-widget-drag-handle.pf-v6-widget-drag-handle--dragging {
@@ -78,8 +69,6 @@
 .pf-v6-widget-grid-tile .pf-v6-widget-grid-tile__header {
   padding-block-start: var(--pf-t--global--spacer--md);
   padding-block-end: var(--pf-t--global--spacer--sm);
-  padding-inline-start: var(--pf-t--global--spacer--md);
-  padding-inline-end: var(--pf-t--global--spacer--lg);
   background: var(--pf-t--global--background--color--secondary--default);
 }
 
@@ -95,40 +84,21 @@
   gap: 0;
 }
 
-.pf-v6-widget-grid-tile .pf-v6-widget-grid-tile__header-link {
-  font-weight: var(--pf-t--global--font--weight--body--bold);
-  font-size: var(--pf-t--global--font--size--body--sm);
-}
-
-.pf-v6-widget-grid-tile .pf-v6-widget-grid-tile__menu-toggle {
-  padding-inline-start: 0;
-  padding-inline-end: 0;
-}
-
 .pf-v6-widget-grid-tile .pf-v6-widget-grid-tile__body {
   padding: 0;
   overflow: auto;
   min-height: 0;
 }
 
-.pf-v6-widget-grid-tile .pf-v6-widget-grid-tile__remove-icon {
-  padding-block-end: var(--pf-t--global--spacer--2xl);
-}
-
-.pf-v6-widget-grid-tile .pf-v6-widget-grid-tile__remove-helper-text {
-  text-wrap: wrap;
-}
-
 .pf-v6-widget-drawer__header {
   height: 100%;
-  padding-block-start: var(--pf-t--global--spacer--md);
+  padding-block-start: var(--pf-t--global--spacer--md) !important;
   padding-block-end: var(--pf-t--global--spacer--md);
   background: var(--pf-t--global--background--color--secondary--default);
 }
 
 .pf-v6-widget-drawer__drag-handle {
   cursor: grab;
-  padding-block-start: var(--pf-t--global--spacer--md);
 }
 
 .pf-v6-widget-page__main-section--drawer {
@@ -144,11 +114,6 @@
 
 .pf-v6-widget-drawer__title {
   padding-block-end: var(--pf-t--global--spacer--sm);
-}
-
-.pf-v6-widget-drawer__close-button {
-  padding-block-start: 0;
-  padding-inline-end: 0;
 }
 
 .pf-v6-widget-gallery {

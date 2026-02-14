@@ -45,7 +45,7 @@
     "@babel/plugin-proposal-private-methods": "^7.18.6",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@patternfly/documentation-framework": "^6.24.2",
-    "@patternfly/patternfly": "^6.5.0-prerelease.33",
+    "@patternfly/patternfly": "^6.4.0",
     "@patternfly/patternfly-a11y": "^5.1.0",
     "@patternfly/react-code-editor": "^6.3.1",
     "@patternfly/react-table": "^6.3.1",
