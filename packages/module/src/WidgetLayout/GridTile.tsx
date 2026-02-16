@@ -164,7 +164,7 @@ const GridTile = ({
             analytics?.('widget-layout.widget-move', { widgetType });
           }}
           onMouseUp={() => setIsDragging(false)}
-          className={clsx({
+          className={clsx('pf-v6-widget-drag-handle', {
             'pf-v6-widget-drag-handle--dragging': isDragging,
           })}
         >
