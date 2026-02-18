@@ -1,5 +1,6 @@
 import 'react-grid-layout/css/styles.css';
 import ReactGridLayout, { useContainerWidth, LayoutItem } from 'react-grid-layout';
+import type { ResizeConfig } from 'react-grid-layout/core';
 import GridTile, { SetWidgetAttribute } from './GridTile';
 import { useEffect, useMemo, useState } from 'react';
 import { isWidgetType } from './utils';
@@ -59,6 +60,8 @@ export interface GridLayoutProps {
   onActiveWidgetsChange?: (widgetTypes: string[]) => void;
   /** Widget type currently being dragged from drawer */
   droppingWidgetType?: string;
+  /** Resize configuration options */
+  resizeWidgetConfig?: Partial<ResizeConfig>;
 }
 
 const LayoutEmptyState = ({
@@ -103,6 +106,7 @@ const GridLayout = ({
   onDrawerExpandChange,
   onActiveWidgetsChange,
   droppingWidgetType,
+  resizeWidgetConfig,
 }: GridLayoutProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [isInitialRender, setIsInitialRender] = useState(true);
@@ -254,6 +258,7 @@ const GridLayout = ({
           enabled: !isLayoutLocked,
           handles: ['s', 'w', 'e', 'n', 'sw', 'nw', 'se', 'ne'],
           handleComponent: getResizeHandle,
+          ...resizeWidgetConfig,
         }}
         dropConfig={{
           enabled: !isLayoutLocked,
