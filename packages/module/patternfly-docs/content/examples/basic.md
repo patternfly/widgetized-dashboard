@@ -94,12 +94,33 @@ const widgetMapping: WidgetMapping = {
       headerLink: {
         title: 'View details',
         href: '/details'
+      },
+      // Optional header info icon — popover by default
+      info: {
+        title: 'About this widget',
+        content: <p>Short help text explaining what this widget shows.</p>
       }
     },
     renderWidget: (id) => <MyWidgetContent />
+  },
+  'detailed-widget': {
+    defaults: { w: 2, h: 4, maxH: 8, minH: 3 },
+    config: {
+      title: 'Detailed Widget',
+      // Use variant: 'modal' when the help content is long
+      info: {
+        title: 'Detailed information',
+        content: <p>Longer help content that needs more space…</p>,
+        variant: 'modal',
+        ariaLabel: 'Detailed widget help'
+      }
+    },
+    renderWidget: (id) => <DetailedWidgetContent />
   }
 };
 ```
+
+When `config.info` is set, an info icon appears in the widget header actions. Clicking it opens a **popover** by default, or a **modal** when `variant: 'modal'` is set.
 
 ### Widget configuration options
 
@@ -112,7 +133,17 @@ const widgetMapping: WidgetMapping = {
 | `config.title` | `string` | Widget title displayed in the header |
 | `config.icon` | `ReactNode` | Icon displayed next to the title |
 | `config.headerLink` | `{ title: string, href: string }` | Optional link displayed in the widget header |
+| `config.info` | `WidgetInfo` | Optional header info icon; see below |
 | `renderWidget` | `(id: string) => ReactNode` | Function that renders the widget content |
+
+### Widget info (`config.info`)
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `content` | `ReactNode` | Body content shown in the popover or modal (required) |
+| `title` | `ReactNode` | Optional header/title for the popover or modal |
+| `variant` | `'popover' \| 'modal'` | Presentation style. Defaults to `'popover'`. Use `'modal'` for longer content |
+| `ariaLabel` | `string` | Accessible label for the info icon button. Defaults to `"More information"` |
 
 ## Template configuration
 

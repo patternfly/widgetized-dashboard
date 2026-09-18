@@ -122,6 +122,17 @@ const widgetMapping: WidgetMapping = {
       headerLink: {
         title: 'View full report',
         href: '#'
+      },
+      // Longer help content — opens in a modal
+      info: {
+        title: 'About Recent Activity',
+        content: (
+          <>
+            <p>This widget lists recent deployments and infrastructure changes.</p>
+            <p>Entries are ordered newest first. Use the footer link to open the full activity report.</p>
+          </>
+        ),
+        variant: 'modal',
       }
     },
     renderWidget: () => <ActivityWidget />
@@ -130,7 +141,12 @@ const widgetMapping: WidgetMapping = {
     defaults: { w: 1, h: 3, maxH: 6, minH: 2 },
     config: {
       title: 'Notifications',
-      icon: <BellIcon />
+      icon: <BellIcon />,
+      // Short help content — opens in a popover (default)
+      info: {
+        title: 'About Notifications',
+        content: <p>Shows alerts, maintenance windows, and available patches that need attention.</p>,
+      }
     },
     renderWidget: () => <NotificationsWidget />
   }

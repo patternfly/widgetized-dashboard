@@ -326,3 +326,84 @@ describe('GridTile - header link', () => {
     expect(screen.getByText('test-widget')).toBeInTheDocument();
   });
 });
+
+describe('GridTile - info action', () => {
+  it('does not render info button when info is not configured', () => {
+    render(<GridTile {...createProps()} />);
+    expect(screen.queryByRole('button', { name: 'More information' })).not.toBeInTheDocument();
+  });
+
+  it('opens a popover with content on click by default', async () => {
+    const user = userEvent.setup();
+    render(
+      <GridTile
+        {...createProps({
+          widgetConfig: {
+            ...createProps().widgetConfig,
+            config: {
+              title: 'Test Widget',
+              info: {
+                title: 'About this widget',
+                content: <p>Short help text</p>,
+              },
+            },
+          },
+        })}
+      />
+    );
+
+    await user.click(screen.getByRole('button', { name: 'More information' }));
+    expect(await screen.findByText('Short help text')).toBeInTheDocument();
+    expect(screen.getByText('About this widget')).toBeInTheDocument();
+  });
+
+  it('opens a modal with content when variant is modal', async () => {
+    const user = userEvent.setup();
+    render(
+      <GridTile
+        {...createProps({
+          widgetConfig: {
+            ...createProps().widgetConfig,
+            config: {
+              title: 'Test Widget',
+              info: {
+                title: 'Detailed info',
+                content: <p>Long form help content</p>,
+                variant: 'modal',
+              },
+            },
+          },
+        })}
+      />
+    );
+
+    expect(screen.queryByText('Long form help content')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'More information' }));
+    expect(await screen.findByText('Long form help content')).toBeInTheDocument();
+    expect(screen.getByText('Detailed info')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Close' }));
+    expect(screen.queryByText('Long form help content')).not.toBeInTheDocument();
+  });
+
+  it('applies a custom ariaLabel to the info button', () => {
+    render(
+      <GridTile
+        {...createProps({
+          widgetConfig: {
+            ...createProps().widgetConfig,
+            config: {
+              info: {
+                content: <p>Help</p>,
+                ariaLabel: 'Widget help details',
+              },
+            },
+          },
+        })}
+      />
+    );
+
+    expect(screen.getByRole('button', { name: 'Widget help details' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'More information' })).not.toBeInTheDocument();
+  });
+});

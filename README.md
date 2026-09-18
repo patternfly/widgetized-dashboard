@@ -53,7 +53,12 @@ const widgetMapping: WidgetMapping = {
     defaults: { w: 2, h: 3, maxH: 6, minH: 2 },
     config: {
       title: 'Example Widget',
-      icon: <CubeIcon />
+      icon: <CubeIcon />,
+      // Optional: header info icon (popover by default; use variant: 'modal' for longer content)
+      info: {
+        title: 'About this widget',
+        content: <p>Short help text explaining what this widget shows.</p>
+      }
     },
     renderWidget: (id) => <div>Widget content goes here</div>
   }
