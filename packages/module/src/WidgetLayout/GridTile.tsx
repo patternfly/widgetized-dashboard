@@ -12,6 +12,10 @@ import {
   Icon,
   MenuToggle,
   MenuToggleElement,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  Popover,
   Skeleton,
   Tooltip,
 } from '@patternfly/react-core';
@@ -19,13 +23,14 @@ import CompressIcon from '@patternfly/react-icons/dist/esm/icons/compress-icon';
 import EllipsisVIcon from '@patternfly/react-icons/dist/esm/icons/ellipsis-v-icon';
 import ExpandIcon from '@patternfly/react-icons/dist/esm/icons/expand-icon';
 import GripVerticalIcon from '@patternfly/react-icons/dist/esm/icons/grip-vertical-icon';
+import InfoCircleIcon from '@patternfly/react-icons/dist/esm/icons/info-circle-icon';
 import LockIcon from '@patternfly/react-icons/dist/esm/icons/lock-icon';
 import MinusCircleIcon from '@patternfly/react-icons/dist/esm/icons/minus-circle-icon';
 import UnlockIcon from '@patternfly/react-icons/dist/esm/icons/unlock-icon';
 import React, { useMemo, useState } from 'react';
 import clsx from 'clsx';
 import type { LayoutItem } from 'react-grid-layout';
-import { ExtendedLayoutItem, WidgetConfiguration, AnalyticsTracker } from './types';
+import { ExtendedLayoutItem, WidgetConfiguration, WidgetInfo, AnalyticsTracker } from './types';
 
 export type SetWidgetAttribute = <T extends string | number | boolean>(id: string, attributeName: keyof ExtendedLayoutItem, value: T) => void;
 
@@ -46,6 +51,53 @@ export type GridTileProps = React.PropsWithChildren<{
   analytics?: AnalyticsTracker;
 }>;
 
+const WidgetInfoAction = ({ info }: { info: WidgetInfo }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const ariaLabel = info.ariaLabel ?? 'More information';
+  const accessibleName = typeof info.title === 'string' ? info.title : ariaLabel;
+  const isModal = info.variant === 'modal';
+
+  const trigger = (
+    <Button
+      className="pf-v6-widget-grid-tile__info-button"
+      variant="plain"
+      aria-label={ariaLabel}
+      onClick={isModal ? () => setIsModalOpen(true) : undefined}
+    >
+      <InfoCircleIcon aria-hidden="true" />
+    </Button>
+  );
+
+  if (isModal) {
+    return (
+      <>
+        {trigger}
+        <Modal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          variant="medium"
+          aria-label={accessibleName}
+        >
+          {info.title != null && <ModalHeader title={info.title} />}
+          <ModalBody>{info.content}</ModalBody>
+        </Modal>
+      </>
+    );
+  }
+
+  return (
+    <Popover
+      triggerAction="click"
+      headerContent={info.title}
+      bodyContent={info.content}
+      appendTo={() => document.body}
+      aria-label={accessibleName}
+    >
+      {trigger}
+    </Popover>
+  );
+};
+
 const GridTile = ({
   widgetType,
   isDragging,
@@ -58,8 +110,8 @@ const GridTile = ({
   analytics,
 }: GridTileProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { headerLink } = widgetConfig.config || {};
-  const hasHeader = headerLink && headerLink.href && headerLink.title;
+  const { headerLink, info } = widgetConfig.config || {};
+  const hasHeader = headerLink?.href && headerLink?.title;
 
   const [linkHref, linkTarget] = useMemo(() => {
     if (!headerLink?.href) {
@@ -133,6 +185,7 @@ const GridTile = ({
 
   const headerActions = (
     <>
+      {info ? <WidgetInfoAction info={info} /> : null}
       <Dropdown
           ouiaId={`${widgetType}-widget`}
           popperProps={{
