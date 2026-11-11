@@ -211,7 +211,10 @@ const GridTile = ({
           <DropdownList>{dropdownItems}</DropdownList>
         </Dropdown>
       <Tooltip content={<p>{widgetConfig.static ? 'Widget locked' : 'Move'}</p>}>
-        <Icon
+        <Button
+          component="span"
+          variant="plain"
+          icon={<GripVerticalIcon aria-hidden="true" />}
           onMouseDown={() => {
             setIsDragging(true);
             analytics?.('widget-layout.widget-move', { widgetType });
@@ -220,9 +223,7 @@ const GridTile = ({
           className={clsx('pf-v6-widget-drag-handle', {
             'pf-v6-widget-drag-handle--dragging': isDragging,
           })}
-        >
-          <GripVerticalIcon />
-        </Icon>
+        />
       </Tooltip>
     </>
   );
