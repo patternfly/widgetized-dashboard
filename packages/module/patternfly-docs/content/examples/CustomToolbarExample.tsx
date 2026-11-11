@@ -155,6 +155,10 @@ const widgetMapping: WidgetMapping = {
     config: {
       title: 'Notifications',
       icon: <BellIcon />,
+      info: {
+        title: 'About Notifications',
+        content: <p>Shows alerts, maintenance windows, and available patches that need attention.</p>,
+      },
     },
     renderWidget: () => <NotificationsWidget />,
   },

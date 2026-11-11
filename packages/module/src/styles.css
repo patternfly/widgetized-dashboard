@@ -57,6 +57,22 @@
   cursor: grab;
 }
 
+.pf-v6-widget-grid-tile .pf-v6-widget-grid-tile__info-button,
+.pf-v6-widget-grid-tile .pf-v6-widget-grid-tile__menu-toggle,
+.pf-v6-widget-grid-tile .pf-v6-widget-drag-handle {
+  inline-size: var(--pf-t--global--spacer--lg);
+  block-size: var(--pf-t--global--spacer--lg);
+  min-inline-size: var(--pf-t--global--spacer--lg);
+  min-block-size: var(--pf-t--global--spacer--lg);
+  padding: 0;
+  align-items: center;
+  line-height: 0;
+}
+
+.pf-v6-widget-grid-tile .pf-v6-c-card__actions {
+  --pf-v6-c-card__actions--Gap: var(--pf-t--global--spacer--gap--action-to-action--plain);
+}
+
 .pf-v6-widget-grid-tile .pf-v6-widget-drag-handle.pf-v6-widget-drag-handle--dragging {
   cursor: grabbing;
 }
