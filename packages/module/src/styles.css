@@ -1,6 +1,11 @@
 .react-grid-item .react-resizable-handle-nw,
+.react-grid-item .react-resizable-handle-ne,
 .react-grid-item .react-resizable-handle-sw,
-.react-grid-item .react-resizable-handle-se {
+.react-grid-item .react-resizable-handle-se,
+.react-grid-item .react-resizable-handle-n,
+.react-grid-item .react-resizable-handle-s,
+.react-grid-item .react-resizable-handle-w,
+.react-grid-item .react-resizable-handle-e {
   display: none;
 }
 
@@ -15,12 +20,23 @@
 }
 
 .react-grid-item:hover:not(.static) .react-resizable-handle-nw,
+.react-grid-item:hover:not(.static) .react-resizable-handle-ne,
 .react-grid-item:hover:not(.static) .react-resizable-handle-sw,
 .react-grid-item:hover:not(.static) .react-resizable-handle-se,
+.react-grid-item:hover:not(.static) .react-resizable-handle-n,
+.react-grid-item:hover:not(.static) .react-resizable-handle-s,
+.react-grid-item:hover:not(.static) .react-resizable-handle-w,
+.react-grid-item:hover:not(.static) .react-resizable-handle-e,
 .react-grid-item:active:not(.static) .react-resizable-handle-nw,
+.react-grid-item:active:not(.static) .react-resizable-handle-ne,
 .react-grid-item:active:not(.static) .react-resizable-handle-sw,
-.react-grid-item:active:not(.static) .react-resizable-handle-se {
-  display: inherit;
+.react-grid-item:active:not(.static) .react-resizable-handle-se,
+.react-grid-item:active:not(.static) .react-resizable-handle-n,
+.react-grid-item:active:not(.static) .react-resizable-handle-s,
+.react-grid-item:active:not(.static) .react-resizable-handle-w,
+.react-grid-item:active:not(.static) .react-resizable-handle-e {
+  display: grid;
+  place-items: center;
 }
 
 /* Doubled class for specificity to override react-grid-layout defaults */
@@ -33,9 +49,45 @@
   display: none;
 }
 
+.react-grid-item.react-grid-item .react-resizable-handle {
+  inline-size: var(--pf-t--global--spacer--lg);
+  block-size: var(--pf-t--global--spacer--lg);
+  color: var(--pf-t--global--icon--color--subtle);
+}
+
+.react-grid-item.react-grid-item > .react-resizable-handle-w,
+.react-grid-item.react-grid-item > .react-resizable-handle-e {
+  margin-block-start: calc(var(--pf-t--global--spacer--lg) / -2);
+}
+
+.react-grid-item.react-grid-item > .react-resizable-handle-n,
+.react-grid-item.react-grid-item > .react-resizable-handle-s {
+  margin-inline-start: calc(var(--pf-t--global--spacer--lg) / -2);
+}
+
+.react-grid-item.react-grid-item > .react-resizable-handle-nw {
+  margin-block-start: calc(var(--pf-t--global--spacer--xs) * 3 / 4);
+  margin-inline-start: calc(var(--pf-t--global--spacer--xs) * 3 / 4);
+}
+
+.react-grid-item.react-grid-item > .react-resizable-handle-ne {
+  margin-block-start: calc(var(--pf-t--global--spacer--xs) * 3 / 4);
+  margin-inline-end: calc(var(--pf-t--global--spacer--xs) * 3 / 4);
+}
+
+.react-grid-item.react-grid-item > .react-resizable-handle-sw {
+  margin-block-end: calc(var(--pf-t--global--spacer--xs) * 3 / 4);
+  margin-inline-start: calc(var(--pf-t--global--spacer--xs) * 3 / 4);
+}
+
+.react-grid-item.react-grid-item > .react-resizable-handle-se {
+  margin-block-end: calc(var(--pf-t--global--spacer--xs) * 3 / 4);
+  margin-inline-end: calc(var(--pf-t--global--spacer--xs) * 3 / 4);
+}
+
 .react-grid-item .react-resizable-handle svg {
-  width: 100%;
-  height: 100%;
+  inline-size: calc(var(--pf-t--global--spacer--md) + var(--pf-t--global--spacer--xs) / 2);
+  block-size: calc(var(--pf-t--global--spacer--md) + var(--pf-t--global--spacer--xs) / 2);
   display: block;
 }
 
