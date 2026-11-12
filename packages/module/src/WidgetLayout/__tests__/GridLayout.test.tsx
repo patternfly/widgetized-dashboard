@@ -9,10 +9,11 @@ import CubeIcon from '@patternfly/react-icons/dist/esm/icons/cube-icon';
 // so we replace it with a pass-through that renders children and triggers onLayoutChange
 jest.mock('react-grid-layout', () => {
   const React = require('react');
-  const MockGridLayout = ({ children, onLayoutChange, layout }: {
+  const MockGridLayout = ({ children, onLayoutChange, layout, className }: {
     children: React.ReactNode;
     onLayoutChange?: (layout: unknown[]) => void;
     layout?: unknown[];
+    className?: string;
     [key: string]: unknown;
   }) => {
     const calledRef = React.useRef(false);
@@ -22,7 +23,7 @@ jest.mock('react-grid-layout', () => {
         onLayoutChange?.(layout || []);
       }
     });
-    return <div data-testid="mock-grid-layout">{children}</div>;
+    return <div data-testid="mock-grid-layout" className={className}>{children}</div>;
   };
   return {
     __esModule: true,
@@ -212,6 +213,17 @@ describe('GridLayout', () => {
   });
 
   describe('droppingWidgetType', () => {
+    it('marks an empty dashboard grid as the drop target', () => {
+      render(
+        <GridLayout
+          widgetMapping={widgetMapping}
+          template={emptyTemplate}
+          droppingWidgetType="widget-a"
+        />
+      );
+      expect(screen.getByTestId('mock-grid-layout')).toHaveClass('pf-v6-widget-grid--empty');
+    });
+
     it('hides empty state when a widget is being dropped', () => {
       render(
         <GridLayout

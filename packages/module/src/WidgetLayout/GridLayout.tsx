@@ -250,6 +250,7 @@ const GridLayout = ({
         key={'grid-' + layoutVariant}
         layout={internalTemplate[layoutVariant]}
         width={effectiveWidth}
+        className={activeLayout.length === 0 ? 'pf-v6-widget-grid--empty' : undefined}
         droppingItem={droppingItemTemplate}
         gridConfig={{
           cols: columns[layoutVariant],
