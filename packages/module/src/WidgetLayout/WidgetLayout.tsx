@@ -4,6 +4,7 @@ import GridLayout from './GridLayout';
 import WidgetDrawer from './WidgetDrawer';
 import AddWidgetsButton from './AddWidgetsButton';
 import { ExtendedTemplateConfig, WidgetMapping, AnalyticsTracker } from './types';
+import { defaultColumns, getWidgetIdentifier, isWidgetType } from './utils';
 
 export interface WidgetLayoutProps {
   /** Widget mapping definition */
@@ -47,6 +48,45 @@ const WidgetLayout = ({
   const [drawerOpen, setDrawerOpen] = useState(initialDrawerOpen);
   const [currentlyUsedWidgets, setCurrentlyUsedWidgets] = useState<string[]>([]);
   const [droppingWidgetType, setDroppingWidgetType] = useState<string | undefined>();
+
+  const createSerializableConfig = (config?: WidgetMapping[string]['config']) => {
+    if (!config) { return undefined; }
+    return {
+      ...(config.title && { title: config.title }),
+      ...(config.headerLink && { headerLink: config.headerLink })
+    };
+  };
+
+  const addWidgetAtOrigin = (widgetType: string) => {
+    if (isLayoutLocked || !isWidgetType(widgetMapping, widgetType)) { return; }
+    const widget = widgetMapping[widgetType];
+    if (!widget) { return; }
+
+    const newTemplate = Object.entries(template).reduce((acc, [size, layout]) => {
+      const newWidget = {
+        ...widget.defaults,
+        w: Math.min(widget.defaults.w, defaultColumns[size as keyof typeof defaultColumns]),
+        x: 0,
+        y: 0,
+        widgetType,
+        i: getWidgetIdentifier(widgetType),
+        title: 'New title',
+        config: createSerializableConfig(widget.config)
+      };
+
+      return {
+        ...acc,
+        [size]: [
+          newWidget,
+          ...layout.map((item) => ({ ...item, y: item.y + newWidget.h })),
+        ],
+      };
+    }, {} as ExtendedTemplateConfig);
+
+    handleTemplateChange(newTemplate);
+    setCurrentlyUsedWidgets(newTemplate.xl.map((item) => item.widgetType));
+    analytics?.('widget-layout.widget-add', { data: widgetType });
+  };
 
   const handleTemplateChange = (newTemplate: ExtendedTemplateConfig) => {
     setTemplate(newTemplate);
@@ -98,6 +138,8 @@ const WidgetLayout = ({
         instructionText={drawerInstructionText}
         onWidgetDragStart={setDroppingWidgetType}
         onWidgetDragEnd={() => setDroppingWidgetType(undefined)}
+        onWidgetAdd={addWidgetAtOrigin}
+        isDisabled={isLayoutLocked}
       >
         {gridLayout}
       </WidgetDrawer>

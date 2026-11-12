@@ -16,6 +16,7 @@ import {
 import React, { useState } from 'react';
 import CloseIcon from '@patternfly/react-icons/dist/esm/icons/close-icon';
 import GripVerticalIcon from '@patternfly/react-icons/dist/esm/icons/grip-vertical-icon';
+import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
 import { WidgetMapping, WidgetConfiguration } from './types';
 
 export type WidgetDrawerProps = React.PropsWithChildren<{
@@ -33,23 +34,20 @@ export type WidgetDrawerProps = React.PropsWithChildren<{
   onWidgetDragStart?: (widgetType: string) => void;
   /** Callback when widget drag ends */
   onWidgetDragEnd?: () => void;
+  /** Callback when a widget is added with the keyboard */
+  onWidgetAdd?: (widgetType: string) => void;
+  /** Whether additions are unavailable because the layout is locked */
+  isDisabled?: boolean;
 }>;
 
-const WidgetWrapper = ({ widgetType, config, onDragStart, onDragEnd }: {
+const WidgetWrapper = ({ widgetType, config, onDragStart, onDragEnd, onAdd, isDisabled }: {
   widgetType: string;
   config?: WidgetConfiguration;
   onDragStart: (widgetType: string) => void;
   onDragEnd: () => void;
-}) => {
-  const headerActions = (
-    <Tooltip content={<p>Drag to add widget</p>}>
-      <Icon>
-        <GripVerticalIcon />
-      </Icon>
-    </Tooltip>
-  );
-
-  return (
+  onAdd?: (widgetType: string) => void;
+  isDisabled?: boolean;
+}) => (
     <Card
       onDragStart={(e) => {
         const nodeRect = (e.target as HTMLElement).getBoundingClientRect();
@@ -71,11 +69,33 @@ const WidgetWrapper = ({ widgetType, config, onDragStart, onDragEnd }: {
       onDragEnd={onDragEnd}
 
       unselectable="on"
-      draggable={true}
+      draggable={!isDisabled}
       className="pf-v6-widget-grid-tile"
       ouiaId={`add-widget-card-${config?.title || widgetType}`}
     >
-      <CardHeader className="pf-v6-widget-drawer__header" actions={{ actions: headerActions, hasNoOffset: true }}>
+      <CardHeader
+        className="pf-v6-widget-drawer__header"
+        actions={{
+          actions: (
+            <>
+              <Tooltip content={<p>Drag to add widget</p>}>
+                <Icon className="pf-v6-widget-drawer__drag-handle">
+                  <GripVerticalIcon />
+                </Icon>
+              </Tooltip>
+              <Button
+                variant="plain"
+                className="pf-v6-widget-drawer__add-button"
+                icon={<PlusCircleIcon />}
+                aria-label={`Add ${config?.title || widgetType} widget to dashboard`}
+                isDisabled={isDisabled}
+                onClick={() => onAdd?.(widgetType)}
+              />
+            </>
+          ),
+          hasNoOffset: true,
+        }}
+      >
         <Flex className="pf-v6-widget-header-layout">
           {config?.icon && (
             <Icon size="md">
@@ -86,8 +106,7 @@ const WidgetWrapper = ({ widgetType, config, onDragStart, onDragEnd }: {
         </Flex>
       </CardHeader>
     </Card>
-  );
-};
+);
 
 const WidgetDrawer = ({
   children,
@@ -98,6 +117,8 @@ const WidgetDrawer = ({
   instructionText,
   onWidgetDragStart,
   onWidgetDragEnd,
+  onWidgetAdd,
+  isDisabled,
 }: WidgetDrawerProps) => {
   const [internalIsOpen, setInternalIsOpen] = useState(false);
 
@@ -151,6 +172,8 @@ const WidgetDrawer = ({
                 config={widget.config}
                 onDragStart={(widgetType) => onWidgetDragStart?.(widgetType)}
                 onDragEnd={() => onWidgetDragEnd?.()}
+                onAdd={onWidgetAdd}
+                isDisabled={isDisabled}
               />
             </GalleryItem>
           ))}

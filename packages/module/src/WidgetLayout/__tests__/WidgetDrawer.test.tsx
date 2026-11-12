@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import WidgetDrawer from '../WidgetDrawer';
 import { WidgetMapping } from '../types';
@@ -103,5 +104,46 @@ describe('WidgetDrawer', () => {
       </WidgetDrawer>
     );
     expect(screen.getByText(/Add new and previously removed widgets/)).toBeInTheDocument();
+  });
+
+  it('adds a widget with the keyboard', async () => {
+    const user = userEvent.setup();
+    const onWidgetAdd = jest.fn();
+
+    render(
+      <WidgetDrawer
+        widgetMapping={widgetMapping}
+        isOpen={true}
+        onWidgetAdd={onWidgetAdd}
+      >
+        <div>Dashboard</div>
+      </WidgetDrawer>
+    );
+
+    const addButton = screen.getByRole('button', { name: /Add Widget A/ });
+    expect(addButton).toHaveClass('pf-v6-widget-drawer__add-button');
+    addButton.focus();
+    await user.keyboard('{Enter}');
+
+    expect(onWidgetAdd).toHaveBeenCalledWith('widget-a');
+  });
+
+  it('does not add a widget when the draggable card is clicked', async () => {
+    const user = userEvent.setup();
+    const onWidgetAdd = jest.fn();
+
+    render(
+      <WidgetDrawer
+        widgetMapping={widgetMapping}
+        isOpen={true}
+        onWidgetAdd={onWidgetAdd}
+      >
+        <div>Dashboard</div>
+      </WidgetDrawer>
+    );
+
+    await user.click(screen.getByText('Widget A'));
+
+    expect(onWidgetAdd).not.toHaveBeenCalled();
   });
 });

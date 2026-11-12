@@ -101,6 +101,24 @@
   cursor: grab;
 }
 
+.pf-v6-widget-drawer__header .pf-v6-c-card__actions {
+  position: relative;
+}
+
+.pf-v6-widget-drawer__add-button {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: calc(100% + var(--pf-t--global--spacer--xs));
+  transform: translateY(-50%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pf-v6-widget-drawer__add-button:focus {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .pf-v6-widget-page__main-section--drawer {
   padding: var(--pf-t--global--spacer--md);
   background-color: var(--pf-t--global--background--color--secondary--default);
