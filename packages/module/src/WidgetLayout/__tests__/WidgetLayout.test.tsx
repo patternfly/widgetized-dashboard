@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import WidgetLayout from '../WidgetLayout';
 import { WidgetMapping, ExtendedTemplateConfig } from '../types';
@@ -13,6 +14,15 @@ const mockWidgetMapping: WidgetMapping = {
       icon: <CubeIcon />
     },
     renderWidget: (id) => <div data-testid={`widget-${id}`}>Test Widget Content</div>
+  }
+};
+
+const twoWidgetMapping: WidgetMapping = {
+  ...mockWidgetMapping,
+  'new-widget': {
+    defaults: { w: 2, h: 3, maxH: 6, minH: 2 },
+    config: { title: 'New Widget' },
+    renderWidget: (id) => <div data-testid={`new-widget-${id}`}>New Widget Content</div>
   }
 };
 
@@ -104,6 +114,36 @@ describe('WidgetLayout', () => {
     );
     // onTemplateChange is invoked by GridLayout during initial layout setup
     expect(handleChange).toHaveBeenCalled();
+  });
+
+  it('adds a widget to the top-left with the keyboard', async () => {
+    const user = userEvent.setup();
+    const handleChange = jest.fn();
+
+    render(
+      <WidgetLayout
+        widgetMapping={twoWidgetMapping}
+        initialTemplate={mockTemplate}
+        onTemplateChange={handleChange}
+        initialDrawerOpen={true}
+      />
+    );
+
+    const widgetCard = screen.getByRole('button', { name: /New Widget/ });
+    widgetCard.focus();
+    await user.keyboard('{Enter}');
+
+    expect(screen.getByText('New Widget Content')).toBeInTheDocument();
+    expect(handleChange).toHaveBeenLastCalledWith(expect.objectContaining({
+      xl: [
+        expect.objectContaining({ widgetType: 'new-widget', x: 0, y: 0 }),
+        expect.objectContaining({ i: 'test-widget#1', y: 3 }),
+      ],
+      sm: [
+        expect.objectContaining({ widgetType: 'new-widget', x: 0, y: 0, w: 1 }),
+        expect.objectContaining({ i: 'test-widget#1', y: 3 }),
+      ],
+    }));
   });
 });
 
