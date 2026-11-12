@@ -30,8 +30,9 @@ const createSerializableConfig = (config?: WidgetConfiguration) => {
 
 const getResizeHandle = (resizeHandleAxis: string, ref: React.Ref<HTMLElement>) => (
     <div ref={ref as React.Ref<HTMLDivElement>} className={`react-resizable-handle react-resizable-handle-${resizeHandleAxis}`}>
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M16 1.14286L14.8571 0L0 14.8571V16H1.14286L16 1.14286Z" fill="currentColor" />
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M9.5 16L16 9.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+        <path d="M4 16L16 4" stroke="currentColor" strokeWidth="1" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
       </svg>
     </div>
   );
