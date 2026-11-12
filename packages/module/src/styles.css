@@ -40,9 +40,14 @@
 }
 
 .pf-v6-widget-layout-container {
+  --pf-v6-widget-layout--empty-min-height: calc(var(--pf-t--global--spacer--4xl) * 2);
   position: relative;
   width: 100%;
-  min-height: 200px;
+  min-height: var(--pf-v6-widget-layout--empty-min-height);
+}
+
+.pf-v6-widget-grid--empty {
+  min-height: var(--pf-v6-widget-layout--empty-min-height);
 }
 
 .pf-v6-widget-grid-tile::before {
